@@ -48,7 +48,7 @@
     margin:0 0 28px;
   }
   h1.title{
-    font-size:clamp(46px,11vw,86px);
+    font-size:clamp(34px,7vw,58px);
     line-height:1.05;
     margin:0;
     font-weight:600;
@@ -99,14 +99,16 @@
     font-size:13px;
   }
   .links a{
-    color:var(--ink);
     text-decoration:none;
-    border:1px solid var(--line);
     border-radius:999px;
-    padding:7px 16px;
-    transition:border-color .2s,color .2s;
+    padding:9px 20px;
+    font-weight:600;
+    transition:opacity .2s,transform .2s;
   }
-  .links a:hover{border-color:var(--serpent-bright);color:var(--serpent-bright);}
+  .links a:hover{opacity:.85;transform:translateY(-1px);}
+  .links a.k{background:var(--kurt);color:#fff;}
+  .links a.m{background:var(--celeste);color:#0d1012;}
+  .links a.b{background:#f5f3ee;color:#0d1012;}
 
   /* ---- chapters ---- */
   .chapter{margin-top:96px;}
@@ -222,7 +224,7 @@
 
 <header class="hero">
   <p class="kicker">CALL OF CTHULHU ／ CO-OP SCENARIO</p>
-  <h1 class="title">シキ<span class="censor">ラレ</span><br>■■</h1>
+  <h1 class="title">シキラレ<br><span class="censor">■■</span></h1>
   <p class="fulltitle">クトゥルフ神話TRPG　KPレスCo-opシナリオ　CoC6版<br>
     【シキラレ■■】（しきられふたへや）<br>
     <span class="dim">―― ２つの部屋と探索者たち ――</span></p>
@@ -238,9 +240,9 @@
     <span class="dim">※本記録は本編クリアまでを収めています。分岐は末尾のコラム参照。</span>
   </div>
   <p class="links">
-    <a href="https://iachara.com/view/13773329" target="_blank" rel="noopener">カート（生身）キャラシ</a>
-    <a href="https://iachara.com/view/13818093" target="_blank" rel="noopener">マックス（生身）キャラシ</a>
-    <a href="https://booth.pm/ja/items/4308991" target="_blank" rel="noopener">配布ページ（BOOTH）</a>
+    <a class="k" href="https://iachara.com/view/13773329" target="_blank" rel="noopener">カート（生身）キャラシ</a>
+    <a class="m" href="https://iachara.com/view/13818093" target="_blank" rel="noopener">マックス（生身）キャラシ</a>
+    <a class="b" href="https://booth.pm/ja/items/4308991" target="_blank" rel="noopener">配布ページ（BOOTH）</a>
   </p>
 </header>
 
