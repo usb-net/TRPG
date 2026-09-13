@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>シキラレ■■ ― ２つの部屋の記録</title>
+<style>
+  :root{
+    --ink:#e8e6df;
+    --ink-dim:#9a978d;
+    --bg:#0d1012;
+    --bg-panel:#12161a;
+    --line:#2a3138;
+    --serpent:#4f7a6a;     /* くすんだ蛇緑 */
+    --serpent-bright:#7bb39c;
+    --blood:#8a3a3a;       /* 乾いた血の赤 */
+    --glass:#3d5866;       /* すりガラスの青緑 */
+    --gold:#c9a24b;        /* タブレット/警告の黄 */
+    --kurt:#c05a5a;        /* カート：落ち着いた赤 */
+    --celeste:#8fd6e6;     /* マックス：チェレステ */
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 120% 80% at 50% -10%, #16201f 0%, transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho","YuMincho",serif;
+    line-height:1.95;
+    font-size:17px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:0 24px 120px;}
+
+  /* ---- hero ---- */
+  header.hero{
+    min-height:78vh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:80px 0 60px;
+    position:relative;
+  }
+  .kicker{
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    font-size:13px;letter-spacing:.28em;
+    color:var(--serpent-bright);
+    margin:0 0 28px;
+  }
+  h1.title{
+    font-size:clamp(46px,11vw,86px);
+    line-height:1.05;
+    margin:0;
+    font-weight:600;
+    letter-spacing:.02em;
+    text-shadow:0 0 40px rgba(79,122,106,.25);
+  }
+  h1.title .censor{
+    color:transparent;
+    position:relative;
+  }
+  h1.title .censor::after{
+    content:"";
+    position:absolute;left:-2px;right:-2px;top:14%;bottom:18%;
+    background:linear-gradient(100deg,var(--blood),#5a2626);
+    border-radius:2px;
+    transform:rotate(-1.2deg);
+  }
+  .fulltitle{
+    margin:30px 0 0;
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    font-size:15px;
+    line-height:1.95;
+    color:var(--ink);
+    letter-spacing:.04em;
+  }
+  .fulltitle .dim{font-size:13.5px;letter-spacing:.12em;}
+  .subtitle{
+    margin:34px 0 0;
+    font-size:18px;
+    color:var(--ink-dim);
+    line-height:1.9;
+  }
+  .meta{
+    margin-top:44px;
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    font-size:13.5px;
+    color:var(--ink-dim);
+    line-height:2.1;
+    border-top:1px solid var(--line);
+    padding-top:24px;
+    max-width:480px;
+  }
+  .meta b{color:var(--ink);font-weight:500;}
+
+  /* ---- chapters ---- */
+  .chapter{margin-top:96px;}
+  .chapter-no{
+    font-family:"Yu Gothic",sans-serif;
+    font-size:12px;letter-spacing:.3em;
+    color:var(--serpent);
+    margin:0 0 6px;
+  }
+  .chapter h2{
+    font-size:clamp(26px,5vw,34px);
+    font-weight:600;
+    margin:0 0 8px;
+    letter-spacing:.02em;
+  }
+  .chapter .place{
+    font-family:"Yu Gothic",sans-serif;
+    font-size:13px;
+    color:var(--ink-dim);
+    margin:0 0 34px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--line);
+  }
+  p{margin:0 0 1.5em;}
+  p.narr{color:var(--ink);}
+  .dim{color:var(--ink-dim);}
+
+  /* dialogue */
+  .line{margin:0 0 .55em;display:flex;gap:0;}
+  .who{
+    flex:0 0 4.2em;
+    font-family:"Yu Gothic",sans-serif;
+    font-size:12.5px;
+    color:var(--ink-dim);
+    padding-top:.35em;
+    letter-spacing:.05em;
+  }
+  .who.k{color:var(--kurt);}
+  .who.m{color:var(--celeste);}
+  .say{flex:1;}
+  .say .q{color:var(--ink);}
+  .line.k .say .q{color:var(--kurt);}
+  .line.m .say .q{color:var(--celeste);}
+  .action{color:var(--ink-dim);font-size:.9em;}
+
+  /* documents found in-world */
+  .doc{
+    background:var(--bg-panel);
+    border-left:3px solid var(--line);
+    padding:20px 24px;
+    margin:0 0 1.6em;
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    font-size:14.5px;
+    line-height:1.85;
+    color:var(--ink-dim);
+  }
+  .doc .lbl{
+    display:block;font-size:11.5px;letter-spacing:.2em;
+    color:var(--serpent);margin-bottom:10px;
+  }
+  .doc.note{border-left-color:var(--blood);}
+  .doc.note .lbl{color:var(--blood);}
+  .doc.tablet{border-left-color:var(--gold);}
+  .doc.tablet .lbl{color:var(--gold);}
+  .doc p{margin:0 0 .7em;}
+  .doc p:last-child{margin:0;}
+
+  .sep{
+    text-align:center;
+    color:var(--serpent);
+    margin:56px 0;
+    letter-spacing:1em;
+    font-size:13px;
+  }
+
+  /* IF column */
+  .column{
+    margin-top:110px;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:40px 34px;
+  }
+  .column .chapter-no{color:var(--blood);}
+  .column h2{font-size:26px;margin-top:0;}
+  .if-item{margin:0 0 22px;padding-bottom:22px;border-bottom:1px solid var(--line);}
+  .if-item:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0;}
+  .if-item h3{
+    font-family:"Yu Gothic",sans-serif;
+    font-size:15px;color:var(--serpent-bright);
+    margin:0 0 8px;font-weight:600;
+  }
+  .if-item p{margin:0;font-size:15px;color:var(--ink-dim);line-height:1.8;}
+
+  footer{
+    margin-top:80px;padding-top:30px;
+    border-top:1px solid var(--line);
+    font-family:"Yu Gothic",sans-serif;
+    font-size:12.5px;color:var(--ink-dim);
+    line-height:2;
+  }
+  footer a{color:var(--serpent-bright);}
+
+  @media(max-width:560px){
+    body{font-size:16px;}
+    .who{flex-basis:3.4em;font-size:11.5px;}
+    .wrap{padding:0 18px 80px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <p class="kicker">CALL OF CTHULHU ／ CO-OP SCENARIO</p>
+  <h1 class="title">シキ<span class="censor">ラレ</span><br>■■</h1>
+  <p class="fulltitle">クトゥルフ神話TRPG　KPレスCo-opシナリオ　CoC6版<br>
+    【シキラレ■■】（しきられふたへや）<br>
+    <span class="dim">―― ２つの部屋と探索者たち ――</span></p>
+  <p class="subtitle">
+    睡眠薬治験のバイトのはずだった。<br>
+    目を覚ませば、見知らぬ密室。腕には、覚えのない注射痕。<br>
+    すりガラス一枚を隔てて、もう一人の声がする。
+  </p>
+  <div class="meta">
+    探索者 ―― <b>カート・クレイマー</b>／<b>マックス・マカリスター</b><br>
+    舞台 ―― 脱出クローズド（製薬会社所有ビル）<br>
+    形式 ―― ２部屋同時進行のCo-op／人間エンド到達<br>
+    <span class="dim">※本記録は本編クリアまでを収めています。分岐は末尾のコラム参照。</span>
+  </div>
+</header>
+
+<!-- 第一章 -->
+<section class="chapter">
+  <p class="chapter-no">PHASE 01</p>
+  <h2>壁の向こうの声</h2>
+  <p class="place">薄暗い個室 ／ すりガラスの仕切り</p>
+
+  <p class="narr">目を開けると、そこは知らない部屋だった。ベッドがひとつ、数字式の電子ロックがついた扉がひとつ。それ以外はほとんど何もない。持っていたはずのスマホもない。左側の壁は、擦りガラスのように白く濁っていて、その向こうに人影のようなものが揺れている。</p>
+
+  <p class="narr">マックスは早々に、その濁った壁に張りついて声を上げていた。睡眠を促す新薬の治験――たしかそういう名目で、社長命令でここへ来たはずだった。カートと一緒に。部屋が分けられた記憶は、あるようなないような。</p>
+
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「誰かいますかーー。聞こえますかーーーーーーーーーー」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「……何処ここ」</span></div></div>
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「きこえなーーーい」</span> <span class="action">――と言ったそばから、</span> <span class="q">「いや聞こえるわ。カート君じゃん、良かった～」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「うるさ」</span></div></div>
+
+  <p class="narr">再会の合図が壁ドンだったのは、たぶんカートの性格ゆえだ。半ギレのマンション住人みたいだ、とマックスが笑う。軽口を叩き合っているうちに、二人はほとんど同時に、自分の腕の内側にある小さな点に気づいた。</p>
+
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「……注射の痕ある」</span></div></div>
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「えなにそれ、うわ俺もだ」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「新薬って錠剤じゃねえの……？」</span></div></div>
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「血管に入れるタイプのお薬だったんだねえ」</span> <span class="action">（平静）</span></div></div>
+
+  <p class="narr">その落ち着きが逆に不穏だった。マックスの部屋には、天井から崩れた瓦礫がある。どかしてみると、その下から白衣を着た――白衣を着た、ヘビのような人間が、押し潰されて死んでいた。ポケットには血に濡れた紙。読み取れたのは、六桁のパスワードの断片だけ。<span class="dim">■■■012。</span></p>
+
+  <p class="narr">一方のカートの部屋の電子ロックには、赤黒い汚れがこびりついていた。ポチ、と押した指の跡と、引き摺るように擦れた跡。数字の「854」あたりが、その血で汚れている。順番はわからない。</p>
+
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「あ、じゃあ854012だったり？　パスワード」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「あ、開いた」</span></div></div>
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「おめでと！」</span></div></div>
+
+  <p class="narr">扉は開いた。ちなみにカートは、その前にすりガラスへ二度ほど本気のタックルを試みて、盛大に突き指している。硬いだけだった。マックスがガラス越しに、届かない手でさすってやっていた。</p>
+</section>
+
+<!-- 第二章 -->
+<section class="chapter">
+  <p class="chapter-no">PHASE 02</p>
+  <h2>Death Ray、あるいは治験の正体</h2>
+  <p class="place">資料の残る通路</p>
+
+  <p class="narr">次の部屋に踏み込むと、二人ともほとんど同時に、軽い目眩を覚えた。やな感じ、とマックスが言う。実際、やばかった。</p>
+
+  <p class="narr">マックスの側には、物騒な表題の書類が落ちていた。</p>
+
+  <div class="doc">
+    <span class="lbl">DOCUMENT ― 『Death Ray の使用方法』</span>
+    <p>殺人光線を発生させる危険な装置が、この施設のどこかに存在するらしい。</p>
+  </div>
+
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「ポケモンのはかいこうせんじゃないんだから」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「……カイリュー居たら最高じゃん」</span></div></div>
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「せめてなみのりにして」</span></div></div>
+
+  <p class="narr">冗談で気を紛らわせても、状況は笑えなかった。どちらの部屋も、天井にぽっかりと風穴が開いている。カートの部屋では、その穴から血が垂れていた。動物実験の痕跡。崩れた瓦礫。マックスの見たヘビ人間の死体も、この崩落に巻き込まれたものらしい。</p>
+
+  <p class="narr">散らばった資料を突き合わせていくと、施設の輪郭が見えてきた。ここは<b>株式会社 Professional Stars</b> 所有ビルの一階。治験の名目は「睡眠を促す新薬」の第III相試験。飲んでから眠るまでの時間と、七時間眠れるかを計る――そういう触れ込みだった。元はごく普通の製薬会社。それが、あのヘビ人間たちに乗っ取られていた。</p>
+
+  <p class="narr">カートは、上階に巨大な蛇の影を見た。まばたきする間に、消えた。注射のせいの幻覚か、それとも。モルモットの実験記録には、投与された個体がほとんど発熱で死んでいったことが記されている。ただ一匹だけ、失明したのちに回復し、むしろ動きが良くなった個体がいた。</p>
+
+  <p class="narr">そして、治験者リスト。番号は090番から始まり、最新の記載はこう続いていた。</p>
+
+  <div class="doc note">
+    <span class="lbl">LIST ― 治験者名簿（抜粋）</span>
+    <p>……214：清原 英二／215：山田 倫夜／<b>216：カート君</b>／<b>217：俺</b>。</p>
+  </div>
+
+  <p class="narr">見慣れた二つの名前が、リストの末尾にあった。ここは治験会場ではなく、実験室だ。マックスは、薬を飲んで横になった直後の、途切れかけた記憶を手繰り寄せる。「実験室へ運べ」――爬虫類のような黄色い瞳の誰かが、そう言った。そして自分を見て、小さく<span class="q">ごめんなさい</span>と呟いた気がする。</p>
+
+  <div class="doc">
+    <span class="lbl">DOCUMENT ― 試作血清・動物実験</span>
+    <p>90番以降、被検体は人間へと切り替えられた。目的は――人間をヘビ人間へ作り変えること。</p>
+  </div>
+
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「……最悪。治験どころの話じゃなくね」</span></div></div>
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「アンブレラ社じゃないんだから」</span></div></div>
+
+  <p class="narr">部屋を進むには、もうひとつ厄介な仕掛けがあった。見慣れない文字盤の時計。数字ではない何かが刻まれていて、そのままでは読めない。カートの側からは、すりガラス越しに同じ時計がぼやけて見える。二人は互いの見え方を照らし合わせた。カタカナの「ケ」のようにも、稲妻のようにも見える印。「ン」か「ソ」に見える印。</p>
+
+  <p class="narr">やがてマックスが、その正体を掴む。文字盤の記号は図形の足し算で、針の位置ごとに数字が組み合わさっている。秒針の位置が「9＋4」、時針が「6＋2」、分針が「12＋3＋8」。並べれば――</p>
+
+  <div class="doc tablet">
+    <span class="lbl">CODE</span>
+    <p>９４６２１２３８</p>
+  </div>
+
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「いや開いた」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「お、まじか」</span></div></div>
+
+  <p class="narr">扉が開くと同時に、また目眩が襲ってきた。今度は、はっきりと何かが削り取られていく感覚があった。</p>
+</section>
+
+<!-- 第三章 -->
+<section class="chapter">
+  <p class="chapter-no">PHASE 03</p>
+  <h2>母の手記</h2>
+  <p class="place">事務所らしき部屋</p>
+
+  <p class="narr">たどり着いたのは、事務所のような部屋だった。本棚、パソコン、書類。カートの部屋には、それに加えて一枚のメモが落ちていた。マックスがそれを読み上げる。</p>
+
+  <div class="doc note">
+    <span class="lbl">NOTE ― 手記</span>
+    <p>どうして……。あの子が私を探して、この場所にたどり着いてしまった。聡い子だったから……。こんな姿の私を、母親だと分からなかったことだけが幸いだった。</p>
+    <p>そうなのね。私がしなければならないことが、やっとわかったわ。あの子や他の人のために、ワクチンを作る。この状態から解放させるよう、そのために私はここに囚われ、試練を受けているのだわ……。</p>
+  </div>
+
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「トカゲ人間になっちゃった、お母さんかも」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「……あの子の為ね」</span></div></div>
+
+  <p class="narr">カートが机をこじ開けようとして、勢い余って取手をもぎ取った。代わりに――と、パソコンのパスワードを探り当てる。中には治験者たちのカルテ。097番「星野いのり」、098番「絵出武七郎」。098番は既にヘビ人間になっていた。血清が、その身体に適応したのだ。</p>
+
+  <p class="narr">マックスは、数十年前のオカルト記事を見つけていた。大西洋の海嶺、海底に眠る古代都市。そこに挟まれた、人ならざる者の言葉。</p>
+
+  <div class="doc">
+    <span class="lbl">ARTICLE ― 古い記事に挟まれたメモ</span>
+    <p>人間によって滅ぼされた我々は、ヴァルーシアの地に囚われ眠らされていた。人間によって目覚めるとは……。今の人間社会を理解するのに数十年かかったが、これから、我が父イグを殺した者共に復讐を。</p>
+  </div>
+
+  <p class="narr">乗っ取りの動機は、復讐だった。父たる存在を殺した人類への。そして棚の奥からは、この一連の異変の核心が出てきた。</p>
+
+  <div class="doc">
+    <span class="lbl">DOCUMENT ― 成長血清について</span>
+    <p>我々、退化していないヘビ人間の血液から作り出した成長血清。本来は、人間をヘビ人間へ作り変えるために使用していた。悔しいことに、そうしなければ種族の衰亡を食い止められないからである。</p>
+    <p>投与された人間は、最大六日間の熱による精神錯乱を引き起こす。そのせいで生存率が極度に下がる。そのため改良を加え、成長を早め、熱を引き起こさないものを開発した。代わりに、目眩や狭心症に似た症状が出るようだ。</p>
+  </div>
+
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「俺達が目眩や胸が痛くても、熱が出ていないのはこれのおかげかな……」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「……最悪」</span></div></div>
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「死ぬとしても、トカゲっちゃうとしても……逢いたいなあ」</span></div></div>
+
+  <p class="narr">その呟きに答えるように、扉が勝手に開いた。</p>
+</section>
+
+<!-- 第四章 -->
+<section class="chapter">
+  <p class="chapter-no">PHASE 04–05</p>
+  <h2>鱗</h2>
+  <p class="place">合流地点 ／ 行き止まり</p>
+
+  <p class="narr">別々の通路を抜けた二人は、ようやく直接、顔を合わせられる場所に出た。ガラス越しではなく。だが――互いの姿を見て、まず言葉に詰まった。</p>
+
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「か……カート君、へび！！　めっちゃ蛇！！　そばかすも無い、ツルツルのお肌が！！！」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「お前も蛇だよ。大丈夫そ」</span></div></div>
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「いや、うん、あっははっは」</span> <span class="action">乾いた笑い。</span> <span class="q">「脱皮すんのかな、俺たち」</span></div></div>
+
+  <p class="narr">症状は、確実に進んでいた。手足の先が痺れ、肌の質感が変わりはじめている。それでも二人は、なお軽口を絶やさなかった。明るいところで見たらイケメンじゃん、と言い合えるうちは、まだ人間の側にいられる気がした。</p>
+
+  <p class="narr">合流地点には、見慣れない言語で書かれた本と、辞書のようなものがあった。二人で辞書を引きながら読み解くと、それは呪文の書だった。恐怖心を植え付ける呪文。そして――「門」に関わる呪文。</p>
+
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「俺ら、魔法使えんの？　まじ？」</span></div></div>
+
+  <p class="narr">床には魔法陣が描かれていた。行き止まりのこの部屋で、出口らしきものは、それだけ。試みても、意味のある手掛かりはもう出てこない。二人は顔を見合わせた。</p>
+
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「もうさ。……これが門です」</span> <span class="action">魔法陣を指して。</span> <span class="q">「俺はそう思います」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「おん……」</span></div></div>
+
+  <p class="narr">進むしかなかった。魔法陣の上に立つ。</p>
+</section>
+
+<!-- 第五章 -->
+<section class="chapter">
+  <p class="chapter-no">PHASE 06</p>
+  <h2>銃口と、かばう腕</h2>
+  <p class="place">最深部</p>
+
+  <p class="narr">門を抜けた先で、二人を待っていたのは銃口だった。丸腰の身体に、それはあまりに理不尽だった。</p>
+
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="action">とっさにカートの前へ身を割り込ませる。</span> <span class="q">「危ない！」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="action">かばわれたまま、その腕にしがみつく。</span> <span class="q">「まじで銃とか、セコい」</span></div></div>
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「門の観察を唱える！　俺が！　宣言した勝ち！」</span></div></div>
+
+  <p class="narr">呪文が発動する。視界がねじれ、世界の縫い目のようなものが一瞬だけ見えた。そして――。</p>
+</section>
+
+<div class="sep">◈ ◈ ◈</div>
+
+<!-- エンディング -->
+<section class="chapter">
+  <p class="chapter-no">ENDING</p>
+  <h2>ぱっぱらぱ～</h2>
+  <p class="place">駐車場、あるいは病室</p>
+
+  <p class="narr">気づけば、二人は外にいた。駐車場のような、避難する人々の流れる場所。あれだけの目に遭ったというのに、マックスはやたらと元気だった。大声を出したらスッキリした、と笑っている。異形化の進んだ身体で人前に出る不安など、どこかへ飛んでいったらしい。</p>
+
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「早く行こ！！　蛇さんも行こ！　蛇でも皆友達！」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「うるせえなこいつ」</span> <span class="action">ぶすっ、と。</span></div></div>
+
+  <p class="narr">――そして暗転。目を覚ますと、そこは病室だった。並んだベッド。すべすべに戻った肌。ワクチンが、間に合ったのだ。マックスが、隣のベッドから手を伸ばして、その肌をすべすべと撫でている。</p>
+
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「カート君がスベスベに戻ってくれてよかった」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「……これ、給料どうなんだろ」</span> <span class="action">ナースコールを連打する。</span></div></div>
+  <div class="line m"><div class="who m">マックス</div><div class="say"><span class="q">「無駄だよ。ナースコールの電源、切ってあるから」</span></div></div>
+  <div class="line k"><div class="who k">カート</div><div class="say"><span class="q">「何してんの？？」</span></div></div>
+
+  <p class="narr">治験には、たしかに行った。だから報酬は払ってもらわなければ困る。理屈はその通りだった。二人とも人間のまま、生きて帰ってきた。それだけで、じゅうぶんに上出来なセッションだった。</p>
+
+  <p class="dim" style="margin-top:2.4em;text-align:center;font-size:14px;">――生還。ワクチン適応、人間エンド。</p>
+</section>
+
+<!-- IF コラム -->
+<aside class="column">
+  <p class="chapter-no">COLUMN</p>
+  <h2>辿らなかった、もう一つの0.1秒</h2>
+  <p class="dim" style="font-size:14.5px;margin-bottom:28px;">
+    本編クリア後、二人は各部屋の分岐を確認して回った。実際には選ばなかった、いくつかの結末の記録。
+  </p>
+
+  <div class="if-item">
+    <h3>瓦礫死エンド</h3>
+    <p>最深部で銃撃を受けた際、瓦礫からの回避に失敗していた場合の分岐。イグの力の余波に呑まれ、探索者はそのまま息絶える。二人が「これだけは嫌だ」と口を揃えた、最も後味の悪いルート。</p>
+  </div>
+
+  <div class="if-item">
+    <h3>蛇人間化エンド（養子ルート）</h3>
+    <p>ワクチンにたどり着けなかった場合、身体は完全にヘビ人間へと変わる。探索者としては実質ロストだが、097「星野いのり」・215「山田倫夜」の母子とともに、疑似家族のようにひっそり生き延びる余地が残される。SIZとSTRが上がり、APP・INT・POWが下がる――爬虫類へ寄っていく変化。</p>
+  </div>
+
+  <div class="if-item">
+    <h3>恐怖の呪文ルート</h3>
+    <p>門の観察ではなく恐怖の呪文を選んだ場合の分岐。ヘビ人間の自害を経て、その後にワクチンが手に入る。ただし救済は相手の死の“後”に訪れるため、後味は重い。息子の分のワクチンを探索者が使ってしまう、という残酷な含みもある。</p>
+  </div>
+
+  <div class="if-item">
+    <h3>Death Ray と、催淫剤</h3>
+    <p>マックスの部屋で進行していた場合に触れられた「殺人光線」。撃つべきではない代物として説明されていた。なお同じ資料ページには「催淫剤」の記載もあり、マックスはそちらに全神経を持っていかれた。カートに即座に却下されている。</p>
+  </div>
+</aside>
+
+<footer>
+  シナリオ『シキラレ■■』（CoC6版・KPレスCo-op）／プレイ記録より小説化。<br>
+  探索者：カート・クレイマー、マックス・マカリスター。<br>
+  配布ページ ―― <a href="https://booth.pm/ja/items/4308991" target="_blank" rel="noopener">BOOTH（booth.pm/ja/items/4308991）</a><br>
+  <span class="dim">本作は株式会社アークライト及び株式会社KADOKAWAが権利を有する『クトゥルフ神話TRPG』の二次創作です。Call of Cthulhu is copyright ©1981 by Chaosium Inc.</span>
+</footer>
+
+</div>
+</body>
+</html>
