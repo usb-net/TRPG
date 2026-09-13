@@ -16,8 +16,8 @@
     --blood:#8a3a3a;       /* 乾いた血の赤 */
     --glass:#3d5866;       /* すりガラスの青緑 */
     --gold:#c9a24b;        /* タブレット/警告の黄 */
-    --kurt:#54DBC2;        /* カート：落ち着いた赤 */
-    --celeste:#D34766;     /* マックス：チェレステ */
+    --kurt:#D34766;        /* カート */
+    --celeste:#54DBC2;     /* マックス */
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -92,6 +92,21 @@
     max-width:480px;
   }
   .meta b{color:var(--ink);font-weight:500;}
+  .links{
+    margin-top:26px;
+    display:flex;flex-wrap:wrap;gap:10px;
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    font-size:13px;
+  }
+  .links a{
+    color:var(--ink);
+    text-decoration:none;
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:7px 16px;
+    transition:border-color .2s,color .2s;
+  }
+  .links a:hover{border-color:var(--serpent-bright);color:var(--serpent-bright);}
 
   /* ---- chapters ---- */
   .chapter{margin-top:96px;}
@@ -222,6 +237,11 @@
     形式 ―― ２部屋同時進行のCo-op／人間エンド到達<br>
     <span class="dim">※本記録は本編クリアまでを収めています。分岐は末尾のコラム参照。</span>
   </div>
+  <p class="links">
+    <a href="https://iachara.com/view/13773329" target="_blank" rel="noopener">カート（生身）キャラシ</a>
+    <a href="https://iachara.com/view/13818093" target="_blank" rel="noopener">マックス（生身）キャラシ</a>
+    <a href="https://booth.pm/ja/items/4308991" target="_blank" rel="noopener">配布ページ（BOOTH）</a>
+  </p>
 </header>
 
 <!-- 第一章 -->
@@ -456,9 +476,6 @@
 </aside>
 
 <footer>
-  シナリオ『シキラレ■■』（CoC6版・KPレスCo-op）／プレイ記録より小説化。<br>
-  探索者：カート・クレイマー、マックス・マカリスター。<br>
-  配布ページ ―― <a href="https://booth.pm/ja/items/4308991" target="_blank" rel="noopener">BOOTH（booth.pm/ja/items/4308991）</a><br>
   <span class="dim">本作は株式会社アークライト及び株式会社KADOKAWAが権利を有する『クトゥルフ神話TRPG』の二次創作です。Call of Cthulhu is copyright ©1981 by Chaosium Inc.</span>
 </footer>
 
