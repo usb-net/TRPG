@@ -1,0 +1,562 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>キャラシ下書き帳</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@500&family=Zen+Old+Mincho:wght@700&display=swap">
+<style>
+/* Layout: 一枚の探索者ファイル。上から 基本情報 → 能力値 → 技能（残りポイントを常時表示）→ 出力 */
+:root{
+  --paper:#eef1ee; --card:#e5eae7; --ink:#1d2a2e; --muted:#5d6b6d; --line:#c6cfcb;
+  --accent:#2f5d62; --accent-ink:#ffffff; --soft:#dfe8e6; --warn:#a8452a; --ok:#3d7a4f;
+  /* 入力・操作する場所：白地に暗い灰色の文字 */
+  --field:#ffffff; --field-ink:#3a4244; --field-muted:#6b7577; --field-line:#b3bdb9; --field-accent:#2f5d62; --field-warn:#a8452a; --field-rec:#1f5fb0;
+  --f-display:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --f-body:"BIZ UDPGothic","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#131a1c; --card:#1a2326; --ink:#dfe6e3; --muted:#94a4a2; --line:#2f3c3f;
+  --accent:#86b9bb; --accent-ink:#0f1a1c; --soft:#23302f; --warn:#e48a70; --ok:#7cc392;
+  --field:#e8edeb; --field-ink:#2c3436; --field-muted:#58636a; --field-line:#9aa6a2; --field-accent:#2f5d62; --field-warn:#a8452a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#131a1c; --card:#1a2326; --ink:#dfe6e3; --muted:#94a4a2; --line:#2f3c3f;
+  --accent:#86b9bb; --accent-ink:#0f1a1c; --soft:#23302f; --warn:#e48a70; --ok:#7cc392;
+  --field:#e8edeb; --field-ink:#2c3436; --field-muted:#58636a; --field-line:#9aa6a2; --field-accent:#2f5d62; --field-warn:#a8452a; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px;display:grid;gap:28px}
+h1{font-family:var(--f-display);font-size:1.9rem;line-height:1.25;margin:0;text-wrap:balance}
+h2{font-family:var(--f-display);font-size:1.25rem;margin:0;text-wrap:balance}
+.eyebrow{font-size:.75rem;letter-spacing:.12em;color:var(--muted);margin:0 0 4px}
+.lead{color:var(--muted);margin:8px 0 0;max-width:62ch}
+section{display:grid;gap:14px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.hint{font-size:.82rem;color:var(--muted);margin:0}
+.notice{background:var(--soft);border-radius:6px;padding:10px 14px;font-size:.9rem;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+label{font-size:.8rem;color:var(--muted);display:grid;gap:4px}
+input,textarea,select{font:inherit;color:var(--field-ink);background:var(--field);border:1px solid var(--field-line);border-radius:4px;padding:6px 8px;min-width:0;color-scheme:light}
+textarea[readonly]{background:var(--card);color:var(--ink);border-color:var(--line);color-scheme:inherit}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+textarea{resize:vertical;width:100%;box-sizing:border-box}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.info .wide{grid-column:1/-1}
+button{font:inherit;font-size:.88rem;cursor:pointer;border-radius:4px;border:1px solid var(--accent);background:transparent;color:var(--accent);padding:6px 12px}
+button.primary{background:var(--accent);color:var(--accent-ink)}
+button:hover{filter:brightness(1.08)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:10px}
+.stat{background:var(--field);color:var(--field-ink);border:1px solid var(--field-line);border-radius:6px;padding:10px 12px;display:grid;gap:6px;min-width:0;color-scheme:light}
+.stat-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.stat-top b{font-family:var(--f-display);font-size:1.05rem}
+.stat-top small{font-family:var(--f-num);font-size:.72rem;color:var(--field-muted)}
+.lv{margin-left:auto;font-size:.85rem;font-weight:700;color:var(--field-accent)}
+.lv output{font-family:var(--f-num);font-weight:500;color:var(--field-muted);margin-left:6px;font-size:.8rem}
+.meter{position:relative;padding-block:4px}
+.meter input[type=range]{width:100%;margin:0;accent-color:var(--field-accent);padding:0;border:none;background:transparent}
+.avg{position:absolute;top:0;bottom:0;width:2px;background:var(--field-muted);opacity:.55;pointer-events:none;transform:translateX(-1px)}
+.scale{display:flex;justify-content:space-between;font-size:.7rem;color:var(--field-muted)}
+.stat p{margin:0;font-size:.82rem;color:var(--field-muted);line-height:1.55}
+.stat label{color:var(--field-muted)}
+.stat select{width:100%}
+.edu-break{font-size:.78rem;color:var(--field-muted)}
+.warnline{color:var(--warn);font-size:.85rem;font-weight:700;margin:0}
+.stat p.warnline{color:var(--field-warn)}
+.stat.bad{border-color:var(--field-warn);box-shadow:0 0 0 1px var(--field-warn)}
+.derived{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.derived div{background:var(--card);padding:8px 12px;display:grid;grid-template-columns:1fr auto;gap:0 10px;align-items:baseline}
+.derived span{font-size:.85rem;font-weight:700}
+.derived output{font-family:var(--f-num);font-size:1.15rem;font-variant-numeric:tabular-nums}
+.derived p{grid-column:1/-1;margin:0;font-size:.76rem;color:var(--muted);line-height:1.5}
+.points{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);padding-block:8px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;border-bottom:1px solid var(--line)}
+.pt{font-size:.85rem}
+.pt output{font-family:var(--f-num);font-size:1.05rem;font-variant-numeric:tabular-nums}
+.pt.over output{color:var(--warn)}
+.pt.done output{color:var(--ok)}
+.toggle{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--ink);margin-left:auto}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:4px 4px;border-bottom:1px solid var(--line);text-align:right}
+th{font-size:.72rem;color:var(--muted);font-weight:400;position:sticky}
+th:first-child,td:first-child{text-align:left}
+tr.cat td{background:var(--soft);font-weight:700;font-size:.78rem;letter-spacing:.1em;text-align:left;color:var(--accent)}
+td input{width:3.1em;text-align:right;font-family:var(--f-num);padding:4px 5px}
+td.name input{width:7.5em;text-align:left;font-family:var(--f-body)}
+td.base,td.total{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+td.total{font-weight:500;min-width:2.4em}
+tr.used td.total{color:var(--accent)}
+.guide{background:var(--card);border-radius:8px;padding:16px;display:grid;gap:12px}
+.guide h2{font-size:1.15rem}
+.guide a{color:var(--accent);text-underline-offset:2px}
+.guide h3{font-family:var(--f-display);font-size:1rem;margin:4px 0 0;border-top:1px solid var(--line);padding-top:12px}
+.relief{margin:0;padding-left:1.2em;display:grid;gap:6px;font-size:.9rem}
+.relief b{color:var(--accent)}
+.rules,.terms dl{margin:0;display:grid;gap:8px;font-size:.88rem;line-height:1.6}
+.rules div,.terms dl div{display:grid;grid-template-columns:5.5em 1fr;gap:10px}
+.rules dt,.terms dt{font-weight:700}
+.rules dd,.terms dd{margin:0}
+.steps{margin:0;padding-left:1.4em;display:grid;gap:6px;font-size:.9rem}
+.terms{background:transparent;border:none;padding:0}
+.terms summary{font-family:var(--f-display);font-size:1rem;border-top:1px solid var(--line);padding-top:12px}
+.terms dl{margin-top:10px}
+.legend{margin:0;display:grid;gap:6px;font-size:.82rem;color:var(--muted);line-height:1.55}
+.legend div{display:grid;grid-template-columns:3em 1fr;gap:8px}
+.legend dt{font-weight:700;color:var(--ink)}
+.legend dd{margin:0}
+.sk-name{border:none;background:none;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer;text-decoration:underline dotted;text-decoration-color:var(--muted);text-underline-offset:3px}
+tr.sk-desc td{font-size:.78rem;color:var(--muted);text-align:left;padding:0 4px 8px;line-height:1.5}
+tr.sk-desc + tr td, tr[data-s]:has(+ tr.sk-desc:not([hidden])) td{border-bottom-color:transparent}
+.tips{display:grid;gap:4px}
+.occ{background:var(--field);color:var(--field-ink);border:1px solid var(--field-line);border-radius:6px;padding:12px;display:grid;gap:8px;color-scheme:light}
+.occ label{color:var(--field-muted)}
+.occ p{margin:0;font-size:.82rem;color:var(--field-muted)}
+.occ p.warnline{color:var(--field-warn)}
+.occ fieldset{border:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:2px 12px}
+.occ legend{font-size:.8rem;color:var(--field-muted);padding:0;margin-bottom:2px;width:100%}
+.ck{display:inline-flex!important;align-items:center;gap:4px;font-size:.85rem;color:var(--field-ink)!important}
+.occ-row{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.occ-k{font-size:.8rem;color:var(--field-muted);margin-right:4px}
+.occ p.occ-caution{color:var(--field-ink);line-height:1.6}
+.occ-caution b{display:block;color:var(--field-warn);font-size:.85rem}
+.rec-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.rec-btn{border-color:var(--field-rec);color:var(--field-rec);background:transparent;padding:3px 10px;font-size:.84rem;border-radius:999px}
+.rec-btn.on{background:var(--field-rec);color:#ffffff}
+option.rec{color:var(--field-rec)}
+.rec-tag{display:inline-block;color:var(--field-rec);font-weight:700;margin-right:6px}
+.chip{border:1px solid var(--field-line);border-radius:999px;padding:1px 9px;font-size:.8rem}
+tr.occ-on td:first-child{font-weight:700}
+tr.over td.total{color:var(--warn)}
+.note{border-left:3px solid var(--accent);padding:6px 12px;font-size:.84rem;color:var(--muted);line-height:1.6;max-width:70ch}
+.note b{display:block;color:var(--ink);font-size:.85rem;margin-bottom:2px}
+.note a{color:var(--accent);text-underline-offset:2px}
+.note select{margin:6px 6px 0 0;padding:3px 6px}
+input:disabled{opacity:.35}
+tr.hidden{display:none}
+.del{border:none;color:var(--muted);padding:0 4px}
+.out{display:grid;gap:10px}
+.out textarea{font-family:var(--f-num);font-size:.78rem;min-height:7em}
+button.big{width:100%;padding:12px;font-size:1rem;font-weight:700}
+.msg{font-size:.85rem;color:var(--ok);min-height:1.3em;margin:0}
+.msg.err{color:var(--warn)}
+details{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 14px}
+summary{cursor:pointer;font-weight:700}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">CALL OF CTHULHU 6th ed.</p>
+    <h1>キャラシ下書き帳</h1>
+    <p class="lead">クトゥルフ神話TRPG（6版）で遊ぶための、自分の探索者（キャラクター）を作るページです。入力内容はこの端末のブラウザに自動で保存されます。</p>
+  </header>
+
+  <section class="guide" aria-labelledby="h-guide">
+    <h2 id="h-guide">このページの使い方</h2>
+    <ol class="steps">
+      <li><b>基本情報</b>　名前・職業（肩書き）・年齢・性別・メモを書きます。</li>
+      <li><b>能力値</b>　つまみを動かして、キャラクターのイメージに合わせます。</li>
+      <li><b>教育（EDU）</b>　最終学歴を選びます。年齢から自動で調整されます。</li>
+      <li><b>職業と技能</b>　職業を選び、ポイントを技能に振ります。迷ったら青字のおすすめ職業から。</li>
+      <li><b>送る</b>　一番下の「送るテキストをコピー」を押して、斑に送ります。</li>
+    </ol>
+    <p class="hint">この卓の遊び方や用語の説明は<a href="https://usb-net.github.io/TRPG/">TRPG案内所</a>にまとめています。</p>
+  </section>
+
+
+  <section aria-labelledby="h-info">
+    <div class="sec-head"><h2 id="h-info">基本情報</h2></div>
+    <aside class="note"><b>どんな探索者にする？</b>このサークルで交流している、普段のあなたの姿を想定しています。別のキャラクターで遊びたい場合は、世界観をそろえるため、名前を漢字一文字にしてください。</aside>
+    <div class="info">
+      <label>名前（HN）<input id="i-name" placeholder="例：斑"></label>
+      <label>職業<input id="i-job"></label>
+      <label>年齢<input id="i-age" inputmode="numeric"></label>
+      <label>性別<input id="i-sex"></label>
+      <label class="wide">メモ（外見・背景・性格など）<textarea id="i-memo" rows="3"></textarea></label>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-stat">
+    <div class="sec-head"><h2 id="h-stat">能力値</h2>
+      <span class="pt" id="statSum">合計 <output id="sumVal">0</output> / 90</span>
+    </div>
+    <p class="hint">つまみを左右に動かして調整します。目盛りの線がスタート地点（10）です。数字は気にせず、キャラクターのイメージに合う位置を選んでください。教育（EDU）以外の7つの合計は90まで。全部10（合計70）の状態から、好きなところに20ポイント上乗せできます。下げた分だけ、ほかをさらに上げられます。</p>
+    <p class="warnline" id="sumWarn" hidden></p>
+    <aside class="note"><b>18はどのくらい？</b>この卓では、18を普通の人間の上限とします。それ以上はトップアスリートや歴史的偉人の領域です。</aside>
+    <aside class="note"><b>INTとEDUの組み合わせ</b>EDUが高くINTが低いと「物知りだが理解は浅い人」、INTが高くEDUが低いと「学はないが世渡り上手な人」。ちぐはぐさもキャラクターの個性になります。</aside>
+    <div class="note" id="ageBox" hidden></div>
+    <div class="stats" id="stats"></div>
+    <div class="derived" id="derived"></div>
+  </section>
+
+  <section aria-labelledby="h-skill">
+    <div class="sec-head"><h2 id="h-skill">技能</h2></div>
+    <dl class="legend">
+      <div><dt>初期</dt><dd>何も学んでいなくても、誰でも持っている成功率です（ルールブックの「基本成功率」）。</dd></div>
+      <div><dt>職業</dt><dd>職業技能ポイント（EDU×20）。上で選んだ職業の技能（太字）にだけ振れます。その職業らしい技能8つくらいまでに、残さず配分します（余りは無効）。</dd></div>
+      <div><dt>興味</dt><dd>個人的な興味の技能ポイント（INT×10）。〈クトゥルフ神話〉以外ならどの技能にも振れます。仕事とは関係なく、そのキャラが趣味や特技、これまでの人生で身につけたことを選んでください（例：釣りが趣味なら〈博物学〉、昔水泳部なら〈水泳〉）。</dd></div>
+      <div><dt>他</dt><dd>成長や補正など、KPに指示された分です。</dd></div>
+      <div><dt>合計</dt><dd>その技能の成功率（％）です。判定では100面ダイスを振り、この数字以下が出れば成功します。1つの技能につき99まで。</dd></div>
+    </dl>
+    <div class="occ" id="occBox"></div>
+    <aside class="note tips"><b>技能の振り方のコツ</b>技能値50で「その道で食べていけるプロ」くらいの腕前です。広く浅く振るより、得意な技能を2〜3個、60〜80まで上げるほうが活躍できます。探索では〈目星〉〈聞き耳〉〈図書館〉のどれかが高いと出番が多く、〈応急手当〉か〈医学〉を持つ人がいると仲間の命を救えます。クトゥルフでは怪物と戦ってもまず勝てないので、戦闘の技能より、逃げる・隠れるための〈回避〉〈隠れる〉〈忍び歩き〉の方が生き延びやすくなります。技能名をタップすると説明が出ます。</aside>
+    <div class="points">
+      <span class="pt" id="ptJob">職業 残り <output id="jobLeft">0</output> / <span id="jobMax">0</span></span>
+      <span class="pt" id="ptHob">興味 残り <output id="hobLeft">0</output> / <span id="hobMax">0</span></span>
+      <label class="toggle"><input type="checkbox" id="showDesc">説明をすべて表示</label>
+      <label class="toggle" style="margin-left:0"><input type="checkbox" id="onlyUsed">振った技能だけ表示</label>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>技能</th><th>初期</th><th>職業</th><th>興味</th><th>他</th><th>合計</th></tr></thead>
+        <tbody id="skills"></tbody>
+      </table>
+    </div>
+    <div class="btns"><button type="button" id="addSkill">技能を追加（他の言語・芸術・製作など）</button></div>
+  </section>
+
+  <section aria-labelledby="h-out">
+    <div class="sec-head"><h2 id="h-out">書き出し・読み込み</h2></div>
+    <div class="out">
+      <p class="hint">完成したら下のボタンを押してコピーし、そのまま斑に送ってください。キャラクターシートに清書します。</p>
+      <button type="button" class="primary big" id="btnKp">送るテキストをコピー</button>
+      <p class="msg" id="msg" role="status"></p>
+      <textarea id="outBox" rows="5" readonly aria-label="書き出し内容"></textarea>
+      <details>
+        <summary>経験者向け（ココフォリア駒・一覧テキスト・共有コード）</summary>
+        <p class="hint">ココフォリア駒：コピーしてココフォリアのルーム画面に貼り付けると駒が作られます（HP・MP・SANと能力値、主な技能の判定コマンド入り）。<br>一覧テキスト：BANDなどに貼れる、技能の合計値だけの一覧です。<br>共有コード：このページで丸ごと復元できる文字列です。</p>
+        <div class="btns" style="margin-top:8px">
+          <button type="button" id="btnCcf">ココフォリア駒をコピー</button>
+          <button type="button" id="btnText">一覧テキストをコピー</button>
+          <button type="button" id="btnCode">共有コードをコピー</button>
+        </div>
+      </details>
+      <details>
+        <summary>共有コードを読み込む</summary>
+        <p class="hint">KPから配られたコード、または他の人のコードを貼り付けて読み込みます。いま入力中の内容は上書きされます。</p>
+        <textarea id="inBox" rows="3" aria-label="共有コード"></textarea>
+        <div class="btns" style="margin-top:8px"><button type="button" id="btnLoad" class="primary">読み込む</button></div>
+      </details>
+    </div>
+  </section>
+</div>
+
+<script>
+const MIN=5,MAX=18,AVG=10;
+const STATS=[
+ ["STR","筋力","重い物を持ち上げる・押す・引く力、しがみつく力。格闘で与えるダメージに関わる。"],
+ ["CON","体力","体力、健康状態、抵抗力など。高いと毒や病気に強くなる。HPの元にもなる。"],
+ ["POW","精神力","意思の強さ、心の強さ。催眠術や魔術的な攻撃への抵抗力になる。SAN・幸運・MPの元になる。"],
+ ["DEX","敏捷性","素早さ、器用さ。戦闘では高い人から先に行動できる。×2したものが基本の回避力になる。"],
+ ["APP","外見","外見の魅力、第一印象の好感度。〈言いくるめ〉や〈値切り〉と組み合わせると効果がある。"],
+ ["SIZ","体格","体の大きさ。大きいほど格闘に有利、小さいと身を隠すのに有利。12で成人男性の平均程度。"],
+ ["INT","知性","賢さ、頭の回転の速さ、物覚えの良さ。×10が趣味（興味）技能のポイントになる。"],
+ ["EDU","教育","学問に使った年数。最終学歴と独学で土台が決まり、基本情報の年齢から、年齢下限（EDU+6歳）を超えた10歳ごとに+1されます。×20が職業技能のポイントになる。"]
+];
+const SCHOOLS=[["中学校卒業",9],["高校卒業",12],["専門学校・短大卒業",14],["大学卒業",16],["大学院（修士）修了",18],["大学院（博士）修了",21]];
+const SELF=[[0,"なし（+0）"],[1,"少し（+1）"],[2,"かなり（+2）"]];
+const SLIDERS=["STR","CON","POW","DEX","APP","SIZ","INT"];
+const CAP=90;
+const DERIVED_DESC={
+ "アイデア":"INT×5。直感力、何かに気付く力。",
+ "幸運":"POW×5。運の強さ。ポケットに必要な小物が入っていたか、など。",
+ "知識":"EDU×5。学校で受けた教育を覚えているか。",
+ "SAN":"POW×5。正気度の初期値。経験によって上下する。",
+ "SAN上限":"99−〈クトゥルフ神話〉。神話技能が上がるほど上限が下がる。",
+ "HP":"(CON+SIZ)÷2、端数切り上げ。怪我で減り、2以下で意識不明、0以下で死亡。",
+ "MP":"POWと同じ値。呪文で消費し、24時間で回復。0以下で気絶。",
+ "ダメージボーナス":"STR+SIZで決まる。素手やナイフなど手持ち武器の攻撃に加算。火器には使わない。",
+ "職業P":"EDU×20。職業技能に割り振るポイント。",
+ "興味P":"INT×10。趣味（興味）技能に割り振るポイント。"
+};
+const level=v=>v<=6?"とても低い":v<=9?"低め":v<=12?"ふつう":v<=15?"高め":"とても高い";
+const SKILLS=[
+ ["探索",[["応急手当",30],["鍵開け",1],["隠す",15],["隠れる",10],["聞き耳",25],["忍び歩き",10],["写真術",10],["精神分析",1],["追跡",10],["登攀",40],["図書館",25],["目星",25]]],
+ ["行動",[["運転",20],["機械修理",20],["重機械操作",1],["乗馬",5],["水泳",25],["製作",5],["操縦",1],["跳躍",25],["電気修理",10],["ナビゲート",10],["変装",1]]],
+ ["交渉",[["言いくるめ",5],["信用",15],["説得",15],["値切り",5],["母国語","EDU5"],["ほかの言語",1]]],
+ ["知識",[["医学",5],["オカルト",5],["化学",1],["クトゥルフ神話",0],["芸術",5],["経理",10],["考古学",1],["コンピューター",1],["心理学",5],["人類学",1],["生物学",1],["地質学",1],["電子工学",1],["天文学",1],["博物学",10],["物理学",1],["法律",5],["薬学",1],["歴史",20]]],
+ ["戦闘",[["回避","DEX2"],["キック",25],["組み付き",25],["こぶし（パンチ）",50],["頭突き",10],["投擲",25],["マーシャルアーツ",1],["拳銃",20],["サブマシンガン",15],["ショットガン",30],["マシンガン",15],["ライフル",25]]]
+];
+
+const UNARMED=["こぶし（パンチ）","キック","組み付き","頭突き","マーシャルアーツ"];
+const MELEE=[...UNARMED];
+const FIRE=["拳銃","サブマシンガン","ショットガン","マシンガン","ライフル"];
+const ALIAS={"コンピュータ":"コンピューター","こぶし/パンチ":"こぶし（パンチ）","こぶし":"こぶし（パンチ）","組みつき":"組み付き","他の言語":"ほかの言語","武術":"マーシャルアーツ","武道":"マーシャルアーツ"};
+const keyOf=l=>{const s=l.replace(/[（(\[].*$/,"").trim();return ALIAS[s]||s};
+const O=(n,d,f,g,free,hint)=>({n,d,f,g:g||[],free:free||0,hint});
+const G=(c,s,opt)=>({n:c,s,opt});
+const OCC=[
+O("医師","内科・外科・歯科・形成外科・精神科などの医師、薬剤師、介護士、臨床技師、医療系の研究者、医学生など。",["医学","応急手当","経理","信用","生物学","説得","薬学","ほかの言語（英語、ラテン語、ドイツ語）"]),
+O("看護師","",["科学","生物学","応急手当","言いくるめ|説得","薬学","心理学","聞き耳","目星"]),
+O("救急救命士","",["医学","応急手当","科学","鍵開け","機械修理","電気修理","登攀"]),
+O("エンジニア","自動車・航空機・工業機械や電気部品の設計技術者、機関士、整備士。建物や橋梁の設計建築士、高専・工業高校・工科大学の学生など。",["機械修理","コンピューター","重機械操作","電気修理","図書館","物理学","ほかの言語（英語）"],[G(1,["化学","地質学","電子工学"])]),
+O("メカニック","大工、石工、配管工、電気工、機械工、機械修理工など。弟子、徒弟、見習いなども含む。",["芸術（大工、配管など）|製作（大工、配管など）","登攀","運転（自動車）","電気修理","機械修理","重機械操作"],[],2),
+O("料理人","コック、板前、パティシエ、ショコラティエ、ソムリエなど。",["科学","芸術（料理）|製作（料理）","生物学","博物学","目星","ほかの言語","料理の歴史"],[G(1,["肉切り包丁","小型ナイフ","小さいこん棒"])]),
+O("芸術家","画家、彫刻家、陶芸家、書家、漫画家、カメラマン、各種デザイナー、映画監督、美大・芸大の学生など。",["言いくるめ|説得","芸術（任意）|製作（任意）","心理学","目星","歴史|博物学"],[G(3,["コンピューター","写真術","生物学","天文学","芸術（任意）","製作（任意）"])]),
+O("デザイナー","グラフィック、Web、ファッション、インテリアなどのデザイナー。",["言いくるめ|説得","芸術（任意）","製作（任意）","コンピューター","心理学","図書館","目星"],[],2),
+O("古物研究家","古書店・骨董品店主、博物館学芸員、図書館司書、民間の郷土史家、美大・考古学部の学生など。",["芸術（任意）","コンピューター","製作（古書修復、古美術修復など）","図書館","値切り","ほかの言語（英語、漢文、ラテン語など）","目星","歴史"]),
+O("コンピューター技術者","プログラマー、システムエンジニア、ネットワーク管理者、ゲームクリエイター、ハッカー、高専・工業高校・工科大学の学生など。",["言いくるめ","経理","コンピューター","電気修理","電子工学","図書館","物理学","ほかの言語（英語、その他）"]),
+O("作家","小説家、翻訳家、ゲーム・映画・演劇などの脚本家、漫画原作者、文学部の学生など。",["オカルト","芸術（トリビア知識、詩的表現など）","心理学","説得","図書館","ほかの言語（英語など）","母国語","歴史"]),
+O("警察官","刑事、交番勤務、地域課・交通課職員、機動隊員、白バイ隊、警察官僚、警察学校の学生など。",["言いくるめ","聞き耳","心理学","説得","追跡","法律","目星"],[G(1,["運転（自動車・二輪車）","信用","組み付き","武道（柔道）","日本刀","拳銃","杖"])]),
+O("科学捜査研究員","",["医学","科学","コンピューター","写真術","人類学","生物学","法律","薬学"]),
+O("自衛官","陸・海・空の自衛官、防衛大の学生など。航空機のパイロットは「パイロット」を選んでください。",["運転（自動車）","応急手当","機械修理","重機械操作","操縦（船舶、潜水艦、戦車、各種航空機など）","ナビゲート"],[G(2,["回避","隠れる","聞き耳","経理","忍び歩き","信用","説得","値切り","法律","ほかの言語（英語など）","こぶし（パンチ）","キック","組み付き","武道（任意）","サブマシンガン","ライフル","グレネード・ランチャー","砲","拳銃"])]),
+O("海上保安官","",["機械修理","重機械操作","信用","操縦（船舶）","登攀","ナビゲート","法律","サバイバル（海）"],[G(2,["電気修理",...MELEE,...FIRE,"砲"])]),
+O("消防士","消防隊員、救助隊員、山岳救助隊員など。",["応急手当","聞き耳","跳躍","追跡","登攀","ナビゲート","サバイバル（山）","ほかの言語"]),
+O("ジャーナリスト","新聞記者、雑誌記者・編集者、テレビ・リポーター、アナウンサー、映像記者、ニュースブロガー、政経学部の学生など。",["言いくるめ","写真術","心理学","説得","図書館","母国語","ほかの言語（英語など）","歴史"]),
+O("宗教家","僧侶、尼僧、神職、巫女、神父、牧師、修道女、山伏、易者、宗教学部・哲学部の学生など。",["オカルト","聞き耳","経理","心理学","説得","図書館","歴史"],[G(1,["言いくるめ","信用","ほかの言語（漢文、梵語、ラテン語など）"])]),
+O("商店主・店員","コンビニや飲食店、販売店などの店員または店主。ネットショップの経営者、経理学部の学生など。",["言いくるめ","聞き耳","経理","心理学","信用","値切り"],[G(1,["運転（自動車、二輪車）","コンピューター"])],1,"商品知識になる技能"),
+O("私立探偵","探偵社員、興信所職員、保険調査員など。",["言いくるめ","鍵開け","心理学","追跡","図書館","法律","目星"],[G(1,["聞き耳","写真術","値切り","スタンガン","こぶし（パンチ）"])]),
+O("水産業従事者","漁師、養殖業者、水産加工業者、ダイバー、海女、水産大の学生など。",["機械修理","重機械操作","水泳","操縦（船舶）","天文学","ナビゲート","博物学","目星"]),
+O("スポーツ選手","野球選手、サッカー選手、ゴルファー、ボクサー、プロレスラー、関取、登山家、射撃選手、体育大学の学生や教官など。",["回避","芸術（任意のスポーツ競技）","跳躍","投擲","登攀"],[G(3,["応急手当","乗馬","水泳","こぶし（パンチ）","キック","頭突き","組み付き","武道（任意）","日本刀","薙刀","杖","弓","競技用アーチェリー","拳銃","ライフル","ショットガン"]),G(1,["忍び歩き"],"俊敏系の競技（テニス・野球・サッカーなど）、エアロ、ヨガ、トレーナーなら追加できる")]),
+O("大学教授","大学や企業の研究機関で専門分野の研究に従事する人、その学生や助手（院生）など。",["信用","心理学","説得","図書館","値切り","ほかの言語（英語など）"],[G(2,["医学","化学","考古学","人類学","生物学","地質学","電子工学","天文学","博物学","物理学","法律","歴史"],"専門研究分野として2つ")]),
+O("評論家","経済、政治、スポーツ、料理などの専門分野について、メディアで意見を述べる人。テレビのコメンテーターなど。",["信用","心理学","説得","図書館","値切り","母国語"],[],2,"専門研究分野：オカルト、博物学、歴史など"),
+O("タレント","俳優、声優、お笑い芸人、司会者、マジシャン、モデル、スポーツ出身タレントなど。",["言いくるめ","聞き耳","信用","心理学","説得","芸術（楽器演奏、歌唱、ダンス、演技、司会など）","変装","ほかの言語（英語）"]),
+O("プロデューサー・マネージャー","テレビ番組制作者や、タレントの付き人などのマスコミ関係者。",["言いくるめ","運転（自動車）","隠れる","聞き耳","忍び歩き","値切り","法律"],[],1),
+O("ダンサー","バックダンサー、バレエダンサー、前衛舞踊家など。",["回避","芸術（ダンス）","忍び歩き","跳躍","登攀","目星"],[],1),
+O("ネットタレント","実況者、歌い手、踊り手、ボカロPなど。",["芸術（歌唱、演劇、ダンス、楽器演奏など）","コンピューター","心理学","説得","電気修理"],[],3),
+O("占い師・霊媒師","スピリチュアリストを含む。",["言いくるめ","オカルト","芸術（演劇）","信用","心理学","説得","値切り"],[],1),
+O("ドライバー","タクシー・バス・トラックの運転手、お抱え運転手、バイク便、レーサーなど。",["運転（自動車、二輪車）","機械修理","聞き耳","重機械操作","電気修理","ナビゲート","値切り","目星"]),
+O("農林業従事者","農家、酪農家、畜産業者、養蜂業者、林業者、ハンター、農大の学生など。",["応急手当","機械修理","重機械操作","製作（農作物、畜産、養蜂など）","追跡","電気修理","博物学"],[G(1,["杖","ライフル","ショットガン","チェーンソー"])]),
+O("パイロット","旅客操縦士、輸送機操縦士、自家用機操縦士、航空自衛官など。",["機械修理","重機械操作","電気修理","操縦（各種航空機、飛行船など）","天文学","ナビゲート","物理学","ほかの言語（英語、その他）"]),
+O("ビジネスマン","会社員（営業・事務など）、金融業者、コンサルタント、通訳、秘書、公務員、経営・商業科の学生など。",["言いくるめ","経理","コンピューター","信用","説得","値切り","法律","ほかの言語（英語など）"]),
+O("接客業","ホスト、ホステス、ウエーター・ウエートレス、ホテルのコンシェルジュ、テーマパーク・スタッフ、メイド・執事など。",["言いくるめ","回避","聞き耳","経理","心理学","説得","値切り","目星"]),
+O("法律家","弁護士、公認会計士、税理士、司法書士、行政書士、弁理士、公証人、法学者、法科の学生など。",["言いくるめ","経理","信用","心理学","説得","図書館","値切り","法律"]),
+O("放浪者","バックパッカー、旅打ちのギャンブラー、屋台のテキ屋、出稼ぎ労働者、お遍路さんなど。",["言いくるめ","隠れる","聞き耳","忍び歩き","心理学","値切り","目星"],[G(1,["運転（自動車、二輪車）","芸術（ギャンブル）","ほかの言語（英語など）"])]),
+O("暴力団組員","ヤクザ、極道者などの構成員。",["言いくるめ","隠す","芸術（刺青彫り、イカサマ）","心理学","値切り","目星"],[G(2,["隠れる","こぶし（パンチ）","キック","組み付き","武道（任意）","日本刀","ナイフ","拳銃"])]),
+O("用心棒","",["鍵開け","隠れる","忍び歩き","心理学","追跡","変装"],[G(1,MELEE,"近接戦の技能から1つ"),G(1,FIRE,"火器の技能から1つ")]),
+O("ネット犯罪者","ハッカー、詐欺師など、ネットやお金の流れを使って法を犯す人。",["コンピューター","心理学","芸術（ハッキング）","製作（コンピューター・ウイルス）","図書館","法律"],[],2),
+O("ミュージシャン","バンドマン、アイドル・歌手、シンガーソングライター、作詞家、作曲家、音楽プロデューサー、クラシック音楽家、音大生など。",["言いくるめ","聞き耳","芸術（歌唱、楽器演奏）","製作（作詞、作曲）","説得","心理学","値切り","ほかの言語（英語）"]),
+O("メンタルセラピスト","カウンセラー、心理士、院内セラピスト、アニマルセラピストなど。",["言いくるめ","芸術（絵画、楽器演奏、歌唱、アロマなど）","信用","心理学","精神分析","説得","法律","ほかの言語（英語、ドイツ語など）"]),
+O("精神科医","",["医学","科学","心理学","精神分析","生物学","説得","薬学","ほかの言語"]),
+O("政治家","自治体の長や議員、国会議員など。",["言いくるめ","聞き耳","芸術（握手）","心理学","説得","法律","歴史","母国語"]),
+O("自宅警備員","ニート、デイトレーダーなど。",["隠れる","聞き耳","コンピューター","忍び歩き","図書館"],[],3)
+];
+const SKILL_DESC={
+"回避":"飛んでくる物や攻撃を、とっさに身をかわして避ける。",
+"キック":"足で蹴る攻撃。〈マーシャルアーツ〉と組み合わせると威力が上がる。",
+"組み付き":"相手につかみかかって押さえ込み、動きを封じたり武器を奪ったりする。",
+"こぶし（パンチ）":"殴る、手刀を打つなどの素手の攻撃。",
+"頭突き":"至近距離での頭突き。もみ合いの最中でも使える。",
+"投擲":"石やナイフなど、手に持った物を投げて当てる。",
+"マーシャルアーツ":"柔道・空手などの武術。素手の攻撃と組み合わせるとダメージが2倍になる。",
+"拳銃":"ピストルやリボルバーを撃つ。",
+"サブマシンガン":"サブマシンガンを撃つ。",
+"ショットガン":"散弾銃を撃つ。近距離ほど当たりやすく威力も大きい。",
+"マシンガン":"据え付け型などの機関銃を撃つ。",
+"ライフル":"ライフル銃を撃つ。遠くの的を狙うときに使う。",
+"応急手当":"ケガをしたその場で手当てし、耐久力を少し回復させる。",
+"鍵開け":"鍵や錠前を開ける、直す。",
+"隠す":"物を人目につかないように隠す、ごまかす。",
+"隠れる":"自分の姿を見つからないように隠す。",
+"聞き耳":"物音や話し声を聞き取り、その意味を理解する。盗み聞きにも使う。",
+"忍び歩き":"音を立てずに、そっと移動する。",
+"写真術":"写真や動画をうまく撮る。写りの悪い写真から情報を読み取ることも。",
+"精神分析":"一時的な狂気に陥った人を落ち着かせ、正気度を回復させる。",
+"追跡":"足跡などの痕跡をたどって、人や動物を追いかける。",
+"登攀":"壁や崖、木などをよじ登る。",
+"図書館":"図書館や資料の山から、必要な情報を見つけ出す。探索で最も重要な技能の一つ。",
+"目星":"隠された物や手がかり、ちょっとした異変に気づく。",
+"運転":"自動車などを運転する。カーチェイスや危険な運転で使う。",
+"機械修理":"壊れた機械を直したり、簡単な仕掛けを作ったりする。",
+"重機械操作":"ブルドーザーやショベルカーなど、大型の機械を動かす。",
+"乗馬":"馬などの動物に乗る、扱う。",
+"水泳":"泳ぐ。溺れそうな状況から抜け出すときにも使う。",
+"製作":"料理、大工、裁縫など、実用的な物を作ったり直したりする。種類を決めて取る。",
+"操縦":"飛行機や船などを操縦する。乗り物の種類ごとに別の技能になる。",
+"跳躍":"跳び上がる、跳び越える。高い所から落ちたときの衝撃を和らげることも。",
+"電気修理":"電気製品や配線を直す、組み直す。",
+"ナビゲート":"地図や星、周りの様子から、今いる場所や進む方向を割り出す。",
+"変装":"化粧や服装、声色を変えて別人のように見せる。",
+"言いくるめ":"口先で相手を丸め込み、その場だけこちらの望みに従わせる。効き目は短い。",
+"信用":"社会的な信用を使って、銀行や組織から信頼を得たり、無理を通したりする。",
+"説得":"時間をかけて話し合い、相手の考えを本心から変えさせる。",
+"値切り":"物を安く買う、取引を自分に有利に進める。",
+"母国語":"生まれ育った言葉の読み書きと会話。",
+"ほかの言語":"母国語以外の言葉の読み書きと会話。言語ごとに別の技能になる。",
+"医学":"病気やケガを診断し、時間をかけて本格的に治療する。",
+"オカルト":"魔術やオカルトの知識。怪しげな本や儀式、秘密結社に詳しい。",
+"化学":"物質の成分を調べたり、薬品を作ったりする。",
+"クトゥルフ神話":"神話の怪物や呪文についての、知ってはならない知識。上がるほど正気度の上限が下がる。",
+"芸術":"楽器、絵画、歌、料理など、何か一つの芸術。種類を決めて取る。",
+"経理":"帳簿を読み、お金の流れや不正を見抜く。",
+"考古学":"遺跡や出土品の年代や由来を見極める。",
+"コンピューター":"パソコンの操作、ネット検索、プログラム、ハッキングなど。",
+"心理学":"相手の表情や態度から、本心や嘘の気配を読み取る。結果はKPがこっそり教えてくれる。",
+"人類学":"人々の暮らしや文化を観察し、その社会の人の考え方や行動を予想する。",
+"生物学":"植物や動物、微生物などの生き物についての科学。",
+"地質学":"岩や地層、鉱物の知識。土質の見極めや、地震・噴火の予測にも。",
+"電子工学":"電子機器の故障を調べて直したり、簡単な装置を作ったりする。",
+"天文学":"星や天体についての知識。星空から日付や時刻を知ることも。",
+"博物学":"動植物や自然についての、昔ながらの観察的な知識。",
+"物理学":"力、熱、電気、光などの理論の理解。実験装置を作ることも。",
+"法律":"法律や判例、裁判の手続きについての知識。",
+"薬学":"薬や毒を見分け、調合する。",
+"歴史":"土地や人物、出来事の歴史を思い出し、目の前の物事と結びつける。"
+};
+const DROP=new Set(["日本刀","杖","薙刀","弓","競技用アーチェリー","ナイフ","スタンガン","砲","グレネード・ランチャー","肉切り包丁","小型ナイフ","小さいこん棒","チェーンソー"]);
+OCC.forEach(o=>{o.g=o.g.map(g=>{const seen=new Set();const s=g.s.filter(x=>{const k=keyOf(x);if(DROP.has(k)||seen.has(k))return false;seen.add(k);return true}).map(x=>x.replace(/^武[道術]（任意）$/,"マーシャルアーツ").replace(/^武[道術]/,"マーシャルアーツ"));return{...g,s,n:Math.min(g.n,s.length)}}).filter(g=>g.s.length)});
+const BASE_NAMES=new Set(SKILLS.flatMap(c=>c[1].map(s=>s[0])));
+const ALLNAMES=[...BASE_NAMES].filter(x=>x!=="クトゥルフ神話");
+const REC=["私立探偵","ジャーナリスト","作家","古物研究家","警察官","大学教授","医師"];
+const blankOcc=()=>({name:"",alt:{},pick:{},free:[]});
+function curOcc(){return OCC.find(x=>x.n===st.occ.name)}
+function occAllowed(){const o=curOcc();if(!o)return null;const set=new Set();
+ o.f.forEach((it,i)=>{if(it.includes("|")){const c=st.occ.alt[i];if(c)set.add(keyOf(c))}else set.add(keyOf(it))});
+ o.g.forEach((g,gi)=>(st.occ.pick[gi]||[]).forEach(x=>{if(g.s.includes(x))set.add(keyOf(x))}));
+ (st.occ.free||[]).forEach(x=>x&&set.add(keyOf(x)));set.delete("クトゥルフ神話");return set}
+function occMissing(o){let k=0;o.f.forEach((it,i)=>{if(it.includes("|")&&!st.occ.alt[i])k++});o.g.forEach((g,gi)=>{if(!g.opt||!/追加できる/.test(g.opt))k+=Math.max(0,g.n-(st.occ.pick[gi]||[]).length)});for(let i=0;i<o.free;i++)if(!st.occ.free[i])k++;return k}
+function buildOcc(){const o=curOcc();
+ const opt=x=>`<option${REC.includes(x.n)?' class="rec"':""}${x.n===st.occ.name?" selected":""}>${x.n}</option>`;
+ let h=`<div class="rec-row"><span class="occ-k">初心者におすすめ</span>${REC.map(r=>`<button type="button" class="rec-btn${r===st.occ.name?" on":""}" data-occ="${r}">${r}</button>`).join("")}</div>
+ <p>青字は、調査でよく使う〈目星〉〈図書館〉〈聞き耳〉〈心理学〉や、けがの手当てに使う技能を職業技能に含む職業です。迷ったらここから選ぶと活躍しやすくなります。</p>
+ <label>職業（技能の分類）<select id="occ-name"><option value="">選ばない（どの技能にも職業ポイントを振れる）</option><optgroup label="おすすめ">${OCC.filter(x=>REC.includes(x.n)).map(opt).join("")}</optgroup><optgroup label="そのほか">${OCC.filter(x=>!REC.includes(x.n)).map(opt).join("")}</optgroup></select></label>`;
+ if(o){if(o.d)h+=`<p>${REC.includes(o.n)?'<span class="rec-tag">おすすめ</span>':""}${o.d}</p>`;
+  h+=`<div class="occ-row"><span class="occ-k">職業技能</span>${o.f.filter(x=>!x.includes("|")).map(x=>`<span class="chip">${x}</span>`).join("")}</div>`;
+  o.f.forEach((x,i)=>{if(!x.includes("|"))return;h+=`<label>どちらか1つ<select id="occ-alt-${i}"><option value="">選ぶ</option>${x.split("|").map(y=>`<option${st.occ.alt[i]===y?" selected":""}>${y}</option>`).join("")}</select></label>`});
+  o.g.forEach((g,gi)=>{const cur=st.occ.pick[gi]||[];h+=`<fieldset><legend>${g.opt||`次から${g.n}つ`}（${cur.length}/${g.n}）</legend>${g.s.map((y,j)=>`<label class="ck"><input type="checkbox" id="occ-g-${gi}-${j}"${cur.includes(y)?" checked":""}>${y}</label>`).join("")}</fieldset>`});
+  for(let i=0;i<o.free;i++)h+=`<label>好きな技能${o.free>1?i+1:""}${o.hint?`（${o.hint}）`:""}<select id="occ-free-${i}"><option value="">選ぶ</option>${ALLNAMES.map(y=>`<option${st.occ.free[i]===y?" selected":""}>${y}</option>`).join("")}</select></label>`;
+  const m=occMissing(o);h+=m?`<p class="warnline">まだ選んでいない職業技能があります（あと${m}つ）。</p>`:`<p>職業ポイントは、太字になっている技能にだけ振れます。</p>`}
+ else h+=`<p class="occ-caution"><b>選ばない場合の注意</b>本来のルールでは、職業ポイントはその職業の技能にしか振れません。選ばずに自由に振るとルールから外れるので、KPの確認で作り直しになることがあります。また、職業は「これまでどう生きてきたか」を表すものなので、決めておかないとロールプレイの手がかりや、シナリオ中で職業を活かした場面が減ります。一覧に合う職業がない場合は、近い職業を選ぶかKPに相談してください。</p>`;
+ $("occBox").innerHTML=h}
+function applyOcc(){const al=occAllowed();
+ if(al){Object.keys(st.skills).forEach(k=>{if(!al.has(k))st.skills[k].j=""});st.extra.forEach(e=>{if(!al.has(e.name))e.j=""});
+  al.forEach(k=>{if(!BASE_NAMES.has(k)&&!st.extra.some(e=>e.name===k))st.extra.push({name:k,base:"",j:"",h:"",o:"",auto:true})});
+  st.extra=st.extra.filter(e=>!e.auto||al.has(e.name)||n(e.h)||n(e.o))}
+ else st.extra=st.extra.filter(e=>!e.auto||n(e.h)||n(e.o)||n(e.j));
+ buildSkills();fill()}
+
+const KEY="coc6-sheet-v1";
+const SAMPLE={sample:true,info:{name:"例：斑",job:"古書店主",age:"30",sex:"男",memo:"記入例です。白紙から作るボタンで消えます。"},
+ stats:{STR:12,CON:14,POW:14,DEX:11,APP:12,SIZ:13,INT:14},edu:{school:"大学卒業",self:0},agePen:[],
+ skills:{"図書館":{j:60},"目星":{j:50},"歴史":{j:60},"値切り":{j:40},"ほかの言語":{j:40},"芸術":{j:30},"製作":{j:40},"聞き耳":{h:45},"回避":{h:30},"応急手当":{h:35},"写真術":{h:30}},extra:[],occ:{name:"古物研究家",alt:{},pick:{},free:[]}};
+const blank=()=>({sample:false,info:{name:"",job:"",age:"",sex:"",memo:""},stats:Object.fromEntries(SLIDERS.map(k=>[k,AVG])),edu:{school:"",self:0},skills:{},extra:[],agePen:[],occ:{name:"",alt:{},pick:{},free:[]}});
+let st=load();if(!st||st.sample)st=blank();
+if(!st.edu)st.edu={school:"",self:0};if(!st.agePen)st.agePen=[];if(!st.occ)st.occ={name:"",alt:{},pick:{},free:[]};
+let lastStat=null;const openDesc=new Set();
+const $=id=>document.getElementById(id);
+const n=v=>{const x=parseInt(v,10);return isNaN(x)?0:x};
+function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+const AGE_PEN_OK=["STR","CON","DEX","APP"];
+function B(k){if(k==="EDU"){const s=SCHOOLS.find(x=>x[0]===st.edu.school);return (s?s[1]:12)+n(st.edu.self)}const v=n(st.stats[k]);return Math.min(MAX,Math.max(MIN,v||AVG))}
+function ageInfo(){const age=n(st.info.age),e0=B("EDU");return{age,bonus:age>=e0+6?Math.floor((age-e0-6)/10):0,pen:age>=40?Math.floor((age-30)/10):0}}
+function adj(k){const a=ageInfo();if(k==="EDU")return a.bonus;if(!AGE_PEN_OK.includes(k))return 0;return -(st.agePen||[]).slice(0,a.pen).filter(x=>x===k).length}
+function S(k){return B(k)+adj(k)}
+function baseOf(b){return b==="DEX2"?S("DEX")*2:b==="EDU5"?S("EDU")*5:b}
+function db(){const v=S("STR")+S("SIZ");if(v<2)return"—";if(v<=12)return"-1D6";if(v<=16)return"-1D4";if(v<=24)return"0";if(v<=32)return"+1D4";if(v<=40)return"+1D6";if(v<=56)return"+2D6";return"+"+(3+Math.floor((v-57)/16))+"D6"}
+function derived(){const myth=total("クトゥルフ神話");return{SAN:S("POW")*5,"SAN上限":99-myth,"幸運":S("POW")*5,"アイデア":S("INT")*5,"知識":S("EDU")*5,HP:Math.ceil((S("CON")+S("SIZ"))/2),MP:S("POW"),"ダメージボーナス":db(),"職業P":S("EDU")*20,"興味P":S("INT")*10}}
+function alloc(name){return st.skills[name]||{}}
+function total(name){const sk=SKILLS.flatMap(c=>c[1]).find(s=>s[0]===name);const a=alloc(name);return baseOf(sk?sk[1]:0)+n(a.j)+n(a.h)+n(a.o)}
+function allRows(){const rows=[];SKILLS.forEach(c=>c[1].forEach(s=>{const a=alloc(s[0]);rows.push({name:s[0],base:baseOf(s[1]),j:n(a.j),h:n(a.h),o:n(a.o)})}));st.extra.forEach(e=>rows.push({name:e.name||"（未入力）",base:n(e.base),j:n(e.j),h:n(e.h),o:n(e.o)}));rows.forEach(r=>r.t=r.base+r.j+r.h+r.o);return rows}
+
+function buildStats(){const pos=(AVG-MIN)/(MAX-MIN)*100;
+ $("stats").innerHTML=STATS.filter(s=>s[0]!=="EDU").map(([k,ja,desc])=>`<div class="stat"><div class="stat-top"><b>${ja}</b><small>${k}</small><span class="lv"><span id="lv-${k}"></span><output id="v-${k}"></output></span></div>
+ <div class="meter"><span class="avg" style="left:calc(${pos}% + ${(50-pos)/50*8}px)"></span><input type="range" id="s-${k}" min="${MIN}" max="${MAX}" step="1" aria-label="${ja}（${k}）"></div>
+ <div class="scale"><span>低い</span><span>スタート（10）</span><span>高い</span></div><p class="warnline" id="sw-${k}" role="status" hidden></p><p>${desc}</p><p class="warnline" id="w-${k}" hidden></p></div>`).join("")+
+ `<div class="stat" id="eduCard"><div class="stat-top"><b>教育</b><small>EDU</small><span class="lv"><output id="v-EDU"></output></span></div>
+ <label>最終学歴<select id="e-school"><option value="">選んでください</option>${SCHOOLS.map(([s,v])=>`<option value="${s}">${s}（${v}）</option>`).join("")}</select></label>
+ <label>独学・仕事で身につけた知識<select id="e-self">${SELF.map(([v,t])=>`<option value="${v}">${t}</option>`).join("")}</select></label>
+ <span class="edu-break" id="eduBreak"></span><p>${STATS.find(s=>s[0]==="EDU")[2]}</p><p class="warnline" id="w-EDU" hidden></p></div>`}
+function buildSkills(){let h="";SKILLS.forEach(([cat,list])=>{h+=`<tr class="cat"><td colspan="6">${cat}</td></tr>`;list.forEach(([name,b])=>{const id=encodeURIComponent(name);h+=`<tr data-s="${name}"><td><button type="button" class="sk-name" data-desc="${name}" aria-expanded="false">${name}</button></td><td class="base"></td>`+["j","h","o"].map(t=>`<td><input id="k-${t}-${id}" data-t="${t}" inputmode="numeric" aria-label="${name} ${t}"${name==="クトゥルフ神話"&&t!=="o"?" disabled title=\"職業・興味ポイントは振れません\"":""}></td>`).join("")+`<td class="total"></td></tr><tr class="sk-desc" data-for="${name}" hidden><td colspan="6">${SKILL_DESC[name]||""}</td></tr>`})});
+ h+=`<tr class="cat"><td colspan="6">追加した技能</td></tr>`;st.extra.forEach((e,i)=>{h+=`<tr data-x="${i}"><td class="name"><input id="x-n-${i}" data-f="name" placeholder="例：英語" aria-label="技能名"><button type="button" class="del" data-del="${i}" aria-label="削除">×</button></td><td><input id="x-b-${i}" data-f="base" inputmode="numeric" aria-label="初期値"${e.auto?' placeholder="?" title="初期値はKPに確認"':""}></td>`+["j","h","o"].map(t=>`<td><input id="x-${t}-${i}" data-f="${t}" inputmode="numeric"></td>`).join("")+`<td class="total"></td></tr>`});
+ if(st.extra.some(e=>e.auto&&(e.base===""||e.base==null)))h+=`<tr><td colspan="6" class="hint" style="text-align:left">職業で自動追加した技能（初期値が「?」）は、初期値をKPに確認して入力してください。</td></tr>`;
+ if(!st.extra.length)h+=`<tr><td colspan="6" class="hint" style="text-align:left">「技能を追加」で、他の言語（英語など）や芸術（絵画など）を個別に足せます。</td></tr>`;
+ $("skills").innerHTML=h}
+function fill(){
+ for(const k of ["name","job","age","sex","memo"])$("i-"+k).value=st.info[k]||"";
+ SLIDERS.forEach(k=>$("s-"+k).value=B(k));$("e-school").value=st.edu.school||"";$("e-self").value=String(n(st.edu.self));
+ SKILLS.forEach(c=>c[1].forEach(([name])=>{const a=alloc(name),id=encodeURIComponent(name);["j","h","o"].forEach(t=>$(`k-${t}-${id}`).value=a[t]||"")}));
+ st.extra.forEach((e,i)=>{$("x-n-"+i).value=e.name||"";$("x-b-"+i).value=e.base??"";["j","h","o"].forEach(t=>$(`x-${t}-${i}`).value=e[t]||"")});
+ buildOcc();refresh()}
+function refresh(){
+ let sum=0;SLIDERS.forEach(k=>{const v=S(k),a=adj(k);sum+=B(k);$("v-"+k).textContent=v+(a?`（年齢${a>0?"+":""}${a}）`:"");$("lv-"+k).textContent=level(B(k))});
+ const ai=ageInfo();$("ageBox").hidden=!(ai.bonus||ai.pen);if(ai.bonus||ai.pen){const pens=st.agePen||[];let h=`<b>年齢による補正（${ai.age}歳）</b>`;if(ai.bonus)h+=`EDUに+${ai.bonus}（自動で加算済み。職業ポイントも${ai.bonus*20}増えます）。`;if(ai.pen){h+=`40歳以上なので、STR・CON・DEX・APPから合計${ai.pen}下げます。下げる能力を選んでください。<br>`;for(let i=0;i<ai.pen;i++)h+=`<select id="ap-${i}" aria-label="下げる能力${i+1}"><option value="">選ぶ</option>${AGE_PEN_OK.map(k=>`<option value="${k}"${pens[i]===k?" selected":""}>${k}</option>`).join("")}</select>`;if(pens.slice(0,ai.pen).filter(Boolean).length<ai.pen)h+=`<span class="warnline">未選択があります。</span>`}$("ageBox").innerHTML=h}$("sumVal").textContent=sum;
+ const over=sum>CAP;$("statSum").className="pt"+(over?" over":sum===CAP?" done":"");const sumMsg=`合計が${CAP}を${sum-CAP}超えています（いま${sum}）。どれかを下げてください。`;
+ $("sumWarn").hidden=!over||!!lastStat;if(over)$("sumWarn").textContent=sumMsg;
+ SLIDERS.forEach(k=>{const show=over&&k===lastStat;$("sw-"+k).hidden=!show;if(show)$("sw-"+k).textContent=sumMsg});
+ const age=n(st.info.age),edu=B("EDU"),ageBad=age>0&&age<edu+6,noSchool=!st.edu.school;
+ const ew=[];if(noSchool)ew.push("最終学歴を選んでください（未選択の間は高校卒業として計算）。");if(ageBad)ew.push(`年齢${age}歳ではこの学歴に届きません（EDU${edu}なら${edu+6}歳以上）。基本情報の年齢か学歴を見直してください。`);
+ $("w-EDU").hidden=!ew.length;$("w-EDU").textContent=ew.join("");$("eduCard").classList.toggle("bad",ageBad);
+ {const sc=SCHOOLS.find(x=>x[0]===st.edu.school),ab=adj("EDU");$("v-EDU").textContent=S("EDU");$("eduBreak").textContent=`学歴${sc?sc[1]:12}＋独学${n(st.edu.self)}＋年齢${ab}${age?`（${age}歳）`:"（基本情報で年齢を入力）"} ＝ EDU ${S("EDU")}`}
+ const dv=derived();$("derived").innerHTML=Object.entries(dv).map(([k,v])=>`<div><span>${k}</span><output>${v}</output><p>${DERIVED_DESC[k]||""}</p></div>`).join("");
+ const rows=allRows();let uj=0,uh=0;rows.forEach(r=>{uj+=r.j;uh+=r.h});
+ document.querySelectorAll("#skills tr[data-s]").forEach(tr=>{const name=tr.dataset.s;const sk=SKILLS.flatMap(c=>c[1]).find(s=>s[0]===name);const a=alloc(name);const used=n(a.j)+n(a.h)+n(a.o)>0;tr.querySelector(".base").textContent=baseOf(sk[1]);tr.querySelector(".total").textContent=total(name);tr.classList.toggle("used",used);tr.classList.toggle("over",total(name)>99);tr.classList.toggle("hidden",$("onlyUsed").checked&&!used);const dr=tr.nextElementSibling;if(dr&&dr.classList.contains("sk-desc"))dr.hidden=tr.classList.contains("hidden")||!($("showDesc").checked||openDesc.has(name))});
+ document.querySelectorAll("#skills tr[data-x]").forEach(tr=>{const e=st.extra[+tr.dataset.x];const xt=n(e.base)+n(e.j)+n(e.h)+n(e.o);tr.querySelector(".total").textContent=xt;tr.classList.add("used");tr.classList.toggle("over",xt>99)});
+ document.querySelectorAll("#skills tr.cat").forEach(tr=>tr.classList.toggle("hidden",false));
+ {const al=occAllowed();document.querySelectorAll("#skills tr[data-s]").forEach(tr=>{const nm=tr.dataset.s;const on=!!al&&al.has(nm);tr.classList.toggle("occ-on",on);if(nm!=="クトゥルフ神話")tr.querySelector('input[data-t="j"]').disabled=!!al&&!on});document.querySelectorAll("#skills tr[data-x]").forEach(tr=>{const e=st.extra[+tr.dataset.x];const on=!!al&&al.has(e.name);tr.classList.toggle("occ-on",on);tr.querySelector('input[data-f="j"]').disabled=!!al&&!on})}
+ const jl=dv["職業P"]-uj,hl=dv["興味P"]-uh;
+ $("jobLeft").textContent=jl;$("jobMax").textContent=dv["職業P"];$("hobLeft").textContent=hl;$("hobMax").textContent=dv["興味P"];
+ $("ptJob").className="pt"+(jl<0?" over":jl===0&&dv["職業P"]>0?" done":"");$("ptHob").className="pt"+(hl<0?" over":hl===0&&dv["興味P"]>0?" done":"");
+ save()}
+function touch(){if(st.sample)st.sample=false}
+
+document.addEventListener("input",ev=>{const t=ev.target;
+ if(t.id.startsWith("i-")){touch();st.info[t.id.slice(2)]=t.value;refresh();return}
+ if(t.id.startsWith("s-")){touch();lastStat=t.id.slice(2);st.stats[lastStat]=n(t.value);refresh();return}
+ if(t.id==="onlyUsed"){refresh();return}
+ if(t.id==="e-school"||t.id==="e-self"){touch();st.edu[t.id==="e-school"?"school":"self"]=t.id==="e-self"?n(t.value):t.value;refresh();return}
+ if(t.id.startsWith("ap-")){touch();st.agePen=st.agePen||[];st.agePen[+t.id.slice(3)]=t.value;refresh();return}
+ const tr=t.closest("tr");if(!tr)return;
+ if(tr.dataset.s){touch();const a=st.skills[tr.dataset.s]||(st.skills[tr.dataset.s]={});a[t.dataset.t]=t.value===""?"":n(t.value);refresh()}
+ else if(tr.dataset.x){touch();const e=st.extra[+tr.dataset.x];e[t.dataset.f]=t.dataset.f==="name"?t.value:(t.value===""?"":n(t.value));refresh()}
+});
+document.addEventListener("click",ev=>{const b=ev.target.closest("button");if(!b)return;
+ if(b.dataset.desc){const k=b.dataset.desc;openDesc.has(k)?openDesc.delete(k):openDesc.add(k);b.setAttribute("aria-expanded",openDesc.has(k));refresh();return}
+ if(b.dataset.occ){touch();st.occ={name:b.dataset.occ,alt:{},pick:{},free:[]};applyOcc();return}
+ if(b.dataset.del){st.extra.splice(+b.dataset.del,1);buildSkills();fill()}
+});
+$("addSkill").onclick=()=>{touch();st.extra.push({name:"",base:1,j:"",h:"",o:""});buildSkills();fill();$("x-n-"+(st.extra.length-1)).focus()};
+$("onlyUsed").onchange=refresh;$("showDesc").onchange=refresh;
+
+function say(t,err){const m=$("msg");m.textContent=t;m.classList.toggle("err",!!err)}
+function copy(text,label){$("outBox").value=text;const ok=()=>say(label+"をコピーしました。");const ng=()=>{$("outBox").select();say("自動コピーできませんでした。下の欄を選択してコピーしてください。",true)};
+ try{navigator.clipboard.writeText(text).then(ok,ng)}catch(e){ng()}}
+function ccfolia(){const dv=derived();const rows=allRows();
+ const params=STATS.map(([k])=>({label:k,value:String(S(k))}));
+ const core=["回避","目星","聞き耳","図書館","応急手当","心理学","説得","言いくるめ","信用","こぶし（パンチ）","クトゥルフ神話"];
+ const pick=rows.filter(r=>r.j+r.h+r.o>0||core.includes(r.name));
+ const cmds=["CCB<={SAN} 【正気度ロール】",`CCB<=${dv["アイデア"]} 【アイデア】`,`CCB<=${dv["幸運"]} 【幸運】`,`CCB<=${dv["知識"]} 【知識】`,...pick.map(r=>`CCB<=${r.t} 【${r.name}】`),...STATS.map(([k])=>`CCB<=${S(k)*5} 【${k}×5】`)];
+ if(dv["ダメージボーナス"]!=="0"&&dv["ダメージボーナス"]!=="—")cmds.push(`${dv["ダメージボーナス"].replace("+","")} 【ダメージボーナス】`);
+ const memo=[st.info.job&&`職業：${st.info.job}`,st.info.age&&`年齢：${st.info.age}`,st.info.sex&&`性別：${st.info.sex}`,st.info.memo].filter(Boolean).join("\n");
+ return JSON.stringify({kind:"character",data:{name:st.info.name||"探索者",initiative:S("DEX"),memo,externalUrl:"",status:[{label:"HP",value:dv.HP,max:dv.HP},{label:"MP",value:dv.MP,max:dv.MP},{label:"SAN",value:dv.SAN,max:dv["SAN上限"]}],params,commands:cmds.join("\n")}})}
+function text(){const dv=derived();const rows=allRows().filter(r=>r.j+r.h+r.o>0);
+ return [`■ ${st.info.name||"探索者"}`,`職業：${st.info.job}${st.occ.name?`（${st.occ.name}）`:""}　年齢：${st.info.age}　性別：${st.info.sex}`,"",
+ STATS.map(([k])=>`${k} ${S(k)}`).join(" / "),
+ `HP ${dv.HP} / MP ${dv.MP} / SAN ${dv.SAN} / 幸運 ${dv["幸運"]} / アイデア ${dv["アイデア"]} / 知識 ${dv["知識"]} / DB ${dv["ダメージボーナス"]}`,"",
+ "【技能】",...rows.map(r=>`${r.name} ${r.t}`),st.info.memo?"\n【メモ】\n"+st.info.memo:""].join("\n").trim()}
+function code(){const o={...st};delete o.sample;return "CS6:"+btoa(unescape(encodeURIComponent(JSON.stringify(o))))}
+const IA_RANGE={STR:[3,18],CON:[3,18],POW:[3,18],DEX:[3,18],APP:[3,18],SIZ:[8,18],INT:[8,18],EDU:[6,21]};
+const IA_ORDER=["戦闘","探索","行動","交渉","知識"];
+function subLabel(key){const o=curOcc();if(!o)return"";const ls=[...o.f.flatMap(x=>x.split("|")),...o.g.flatMap(g=>g.s)];
+ const chosen=new Set([...o.f.filter(x=>!x.includes("|")),...Object.values(st.occ.alt),...Object.values(st.occ.pick).flat()]);
+ const l=ls.find(x=>chosen.has(x)&&keyOf(x)===key&&/[（(]/.test(x));return l?l.replace(/^[^（(]*[（(]/,"").replace(/[）)]$/,""):""}
+function kpText(){const dv=derived(),out=[];
+ out.push("■ 探索者シート（斑あて）",`名前：${st.info.name||"（未入力）"}`,`職業：${st.info.job||"（未入力）"}`,`年齢：${st.info.age||"（未入力）"}`,`性別：${st.info.sex||"（未入力）"}`,`ルール上の職業：${st.occ.name||"選ばない"}`,"");
+ out.push("【能力値】");
+ STATS.forEach(([k])=>{const v=S(k),[lo,hi]=IA_RANGE[k],pd=Math.min(hi,Math.max(lo,v)),inc=v-pd;out.push(`${k}：${v}`+(inc?`（プルダウン${pd}、増加分${inc>0?"+":""}${inc}）`:""))});
+ out.push(`確認用：HP ${dv.HP} / MP ${dv.MP} / 正気度 ${dv.SAN} / アイデア ${dv["アイデア"]} / 幸運 ${dv["幸運"]} / 知識 ${dv["知識"]} / ダメージボーナス ${dv["ダメージボーナス"]}`,"");
+ const rows=allRows();let uj=0,uh=0;rows.forEach(r=>{uj+=r.j;uh+=r.h});
+ out.push(`【技能】職業P ${uj}/${dv["職業P"]}、興味P ${uh}/${dv["興味P"]}（ポイントを振った技能のみ）`);
+ const line=(name,a,extra)=>{const j=n(a.j),h=n(a.h),o=n(a.o);if(!(j+h+o))return null;const sub=subLabel(name);return `${extra||""}${name}${sub?`（${sub}）`:""}：職業P ${j} / 興味P ${h}${o?` / その他 ${o}`:""}（合計 ${total(name)}）`};
+ IA_ORDER.forEach(cat=>{const c=SKILLS.find(x=>x[0]===cat);const ls=c[1].filter(([nm])=>nm!=="ほかの言語").map(([nm])=>line(nm,alloc(nm))).filter(Boolean);if(ls.length)out.push(`［${cat}技能］`,...ls)});
+ const adds=[];const ol=line("ほかの言語",alloc("ほかの言語"));if(ol)adds.push(ol.replace("：","：初期値 1 / "));
+ st.extra.forEach(e=>{const j=n(e.j),h=n(e.h),o=n(e.o);if(!(j+h+o))return;adds.push(`${e.name||"（名前未入力）"}：初期値 ${e.base===""||e.base==null?"未定（KPが決める）":e.base} / 職業P ${j} / 興味P ${h}${o?` / その他 ${o}`:""}`)});
+ if(adds.length)out.push("［追加する技能］",...adds);
+ out.push("",`【メモ】`,st.info.memo||"（なし）","","【共有コード】",code());
+ return out.join("\n")}
+$("btnKp").onclick=()=>copy(kpText(),"送るテキスト");
+$("btnCcf").onclick=()=>copy(ccfolia(),"ココフォリア駒");
+$("btnText").onclick=()=>copy(text(),"一覧テキスト");
+$("btnCode").onclick=()=>copy(code(),"共有コード");
+$("btnLoad").onclick=()=>{try{const raw=$("inBox").value.trim().replace(/^CS6:/,"");const o=JSON.parse(decodeURIComponent(escape(atob(raw))));
+ if(!o.stats||!o.info)throw 0;st={...blank(),...o,sample:false,extra:o.extra||[],skills:o.skills||{},edu:o.edu||{school:"",self:0},agePen:o.agePen||[],occ:o.occ||{name:"",alt:{},pick:{},free:[]}};buildSkills();fill();$("inBox").value="";say("共有コードを読み込みました。")}catch(e){say("読み込めませんでした。コードが途中で切れていないか確認してください。",true)}};
+document.addEventListener("change",ev=>{const t=ev.target;if(!t.id||!t.id.startsWith("occ-"))return;touch();
+ if(t.id==="occ-name")st.occ={name:t.value,alt:{},pick:{},free:[]};
+ else if(t.id.startsWith("occ-alt-"))st.occ.alt[t.id.slice(8)]=t.value;
+ else if(t.id.startsWith("occ-free-"))st.occ.free[+t.id.slice(9)]=t.value;
+ else if(t.id.startsWith("occ-g-")){const [gi,j]=t.id.slice(6).split("-").map(Number);const g=curOcc().g[gi];const cur=st.occ.pick[gi]||(st.occ.pick[gi]=[]);const y=g.s[j];
+  if(t.checked){if(cur.length>=g.n){t.checked=false;say(`この枠は${g.n}つまでです。`,true);return}cur.push(y)}else st.occ.pick[gi]=cur.filter(z=>z!==y)}
+ applyOcc()});
+document.addEventListener("submit",e=>e.preventDefault());
+buildStats();buildSkills();fill();
+</script>
+
+</body></html>

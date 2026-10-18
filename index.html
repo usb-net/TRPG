@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>TRPG案内所</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@500&family=Zen+Old+Mincho:wght@700&display=swap">
+<style>
+/* Layout: 一枚の案内板。上から順に読めば遊べるように、はじめて→遊び方→流れ→下書き帳 */
+:root{
+  --paper:#eef1ee; --card:#e5eae7; --ink:#1d2a2e; --muted:#5d6b6d; --line:#c6cfcb;
+  --accent:#2f5d62; --accent-ink:#ffffff; --soft:#dfe8e6;
+  --f-display:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --f-body:"BIZ UDPGothic","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#131a1c; --card:#1a2326; --ink:#dfe6e3; --muted:#94a4a2; --line:#2f3c3f;
+  --accent:#86b9bb; --accent-ink:#0f1a1c; --soft:#23302f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#131a1c; --card:#1a2326; --ink:#dfe6e3; --muted:#94a4a2; --line:#2f3c3f;
+  --accent:#86b9bb; --accent-ink:#0f1a1c; --soft:#23302f; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px;display:grid;gap:36px}
+.eyebrow{font-family:var(--f-num);font-size:.72rem;letter-spacing:.14em;color:var(--muted);margin:0 0 4px}
+h1{font-family:var(--f-display);font-size:2rem;line-height:1.25;margin:0;text-wrap:balance}
+h2{font-family:var(--f-display);font-size:1.3rem;margin:0;text-wrap:balance;display:flex;align-items:baseline;gap:10px}
+h2 .no{font-family:var(--f-num);font-size:.8rem;color:var(--accent);letter-spacing:.08em}
+h3{font-family:var(--f-display);font-size:1.02rem;margin:8px 0 0}
+p{margin:0;max-width:65ch}
+.lead{color:var(--muted);margin-top:10px}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+nav a{color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:4px 12px;font-size:.85rem;text-decoration:none}
+nav a:hover,nav a:focus-visible{background:var(--accent);color:var(--accent-ink);outline:none}
+section{display:grid;gap:14px;scroll-margin-top:16px}
+.sec-head{border-bottom:1px solid var(--line);padding-bottom:6px}
+.relief{margin:0;padding:14px 16px 14px 2.2em;background:var(--card);border-radius:8px;display:grid;gap:8px}
+.relief b{color:var(--accent)}
+dl{margin:0;display:grid;gap:10px}
+dl div{display:grid;grid-template-columns:6.5em 1fr;gap:12px}
+dt{font-weight:700}
+dd{margin:0}
+.terms div{padding-bottom:8px;border-bottom:1px solid var(--line)}
+.terms div:last-child{border-bottom:none;padding-bottom:0}
+.steps{margin:0;padding:0;list-style:none;display:grid;gap:0;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2.2em 1fr;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(s);font-family:var(--f-num);font-size:1.1rem;color:var(--accent);line-height:1.5}
+.steps b{display:block}
+.steps span{color:var(--muted);font-size:.9rem}
+.tool{background:var(--card);border-radius:8px;padding:18px;display:grid;gap:12px}
+.btn{display:block;text-align:center;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:700;border-radius:6px;padding:12px}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.note{font-size:.85rem;color:var(--muted)}
+.links{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.links li{display:grid;gap:2px;padding:12px 0;border-bottom:1px solid var(--line)}
+.links li:last-child{border-bottom:none}
+.links a{color:var(--accent);font-weight:700;text-underline-offset:3px}
+.links span{color:var(--muted);font-size:.88rem}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+thead th{background:var(--card);font-size:.78rem;color:var(--muted);font-weight:700;text-align:left;padding:8px 12px}
+tbody th{text-align:left;vertical-align:top;padding:10px 12px;white-space:nowrap;font-weight:700;border-top:1px solid var(--line);width:3.5em}
+tbody td{padding:10px 12px;border-top:1px solid var(--line)}
+.d{display:inline-block;font-family:var(--f-num);color:var(--accent);min-width:1.4em}
+td ul{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+@media (max-width:420px){dl div{grid-template-columns:1fr;gap:2px}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">CALL OF CTHULHU 6th ed.</p>
+    <h1>TRPG案内所</h1>
+    <p class="lead">サークルで遊ぶクトゥルフ神話TRPGの案内です。初めての人は、上から順に読めば遊べるようになっています。</p>
+    <nav aria-label="目次">
+      <a href="#first">はじめての人へ</a>
+      <a href="#rules">この卓の遊び方</a>
+      <a href="#flow">遊ぶまでの流れ</a>
+      <a href="#sheet">キャラシ下書き帳</a>
+      <a href="#madness">一時的狂気表</a>
+      <a href="#links">役立つリンク</a>
+    </nav>
+  </header>
+
+  <section id="first" aria-labelledby="h-first">
+    <div class="sec-head"><h2 id="h-first"><span class="no">01</span>はじめての人へ</h2></div>
+    <h3>TRPGって？</h3>
+    <p>TRPG（テーブルトークRPG）は、会話で進めるごっこ遊びのようなゲームです。進行役のKPが場面を説明し、プレイヤーは自分のキャラクターが何をするかを言葉で伝えます。うまくいくか分からない行動のときだけ、ダイスを振って結果を決めます。</p>
+    <h3>クトゥルフ神話TRPGって？</h3>
+    <p>現代を舞台に、身の回りで起きた不思議な事件や怪異の謎を調べるゲームです。怪物と戦って倒すのではなく、手がかりを集めて真相にたどり着き、生きて帰ることを目指します。少し怖い雰囲気も楽しみのひとつです。</p>
+    <ul class="relief">
+      <li><b>ルールを覚えてくる必要はありません。</b>分からないことは、遊びながらその都度説明します。</li>
+      <li><b>やりたいことは、普通の言葉で伝えれば大丈夫です。</b>「この本棚を調べたい」のように書けば、必要なときはKPがダイスを振るよう案内します。</li>
+      <li><b>キャラシは相談しながら作れます。</b>迷ったところは空けたままでも、送ってから一緒に直せます。</li>
+    </ul>
+    <h3>用語のミニ解説</h3>
+    <dl class="terms">
+      <div><dt>探索者</dt><dd>あなたが動かすキャラクターのこと。事件を調べる人。</dd></div>
+      <div><dt>KP</dt><dd>キーパー。お話を進める進行役（この卓では斑）。</dd></div>
+      <div><dt>PL</dt><dd>プレイヤー。探索者を動かす人、つまりあなた。</dd></div>
+      <div><dt>セッション</dt><dd>集まって1回遊ぶこと。</dd></div>
+      <div><dt>シナリオ</dt><dd>遊ぶお話（事件）の台本。KPが用意します。</dd></div>
+      <div><dt>キャラシ</dt><dd>キャラクターシート。探索者の能力や技能をまとめたもの。</dd></div>
+      <div><dt>判定</dt><dd>行動がうまくいくかをダイスで決めること。100面ダイスを振り、技能の数値以下なら成功。</dd></div>
+      <div><dt>1D6など</dt><dd>「6面ダイスを1個振る」という意味。2D6なら6面ダイスを2個振って合計します。</dd></div>
+      <div><dt>SAN（正気度）</dt><dd>心の余裕。怖いものを見ると減っていきます。</dd></div>
+      <div><dt>ロスト</dt><dd>探索者が死亡したり、再起不能になったりすること。</dd></div>
+      <div><dt>テキセ</dt><dd>テキストセッション。声を使わず、文字のやり取りだけで遊ぶこと。</dd></div>
+      <div><dt>ココフォリア</dt><dd>オンラインでセッションを遊ぶためのサイト。チャットとダイスが使えます。</dd></div>
+    </dl>
+  </section>
+
+  <section id="rules" aria-labelledby="h-rules">
+    <div class="sec-head"><h2 id="h-rules"><span class="no">02</span>この卓の遊び方</h2></div>
+    <dl>
+      <div><dt>ロスト</dt><dd>この卓では、ロスト（死亡・再起不能）や重い後遺症はなしで遊びます。本来のクトゥルフはロストもありうる緊張感を楽しむゲームですが、サークル内では探索者を「ゲームの中のキャラクター」として扱います。</dd></div>
+      <div><dt>普段の交流</dt><dd>そのため、セッション中のケガや出来事、キャラクター同士の関係は、普段のサークルの会話には持ち込みません。</dd></div>
+      <div><dt>探索者</dt><dd>サークルで交流している、普段のあなたの姿で作るのが基本です。別のキャラクターで遊びたい場合は、名前を漢字一文字にしてください。</dd></div>
+      <div><dt>日程</dt><dd>日程は「調整さん」で合わせます。</dd></div>
+      <div><dt>時間</dt><dd>1回の時間はその都度、開始時に決めます。だいたい2時間を目安に区切り、終わらなければ別の日に続きを遊びます。</dd></div>
+      <div><dt>遊ぶ場所</dt><dd>ココフォリアを使ったテキセです。スマホからでも参加できます。</dd></div>
+    </dl>
+  </section>
+
+  <section id="flow" aria-labelledby="h-flow">
+    <div class="sec-head"><h2 id="h-flow"><span class="no">03</span>遊ぶまでの流れ</h2></div>
+    <ol class="steps">
+      <li><div><b>参加を希望する</b><span>募集掲示板の募集に参加希望を出します。</span></div></li>
+      <li><div><b>探索者を作る</b><span>下の「キャラシ下書き帳」で作り、できたら「送るテキストをコピー」で斑に送ります。斑がキャラクターシートに清書します。</span></div></li>
+      <li><div><b>日程を合わせる</b><span>斑が用意する「調整さん」に、参加できる日時を入力します。</span></div></li>
+      <li><div><b>ココフォリアに入る</b><span>部屋のURLはサークル内で案内します。登録しなくても参加できますが、登録しておくと別の端末から入ったときも同じキャラクターで続けられます。</span></div></li>
+      <li><div><b>当日</b><span>最初にその日の終わりの時間を決めてから始めます。ダイスの振り方などは、その場で案内します。</span></div></li>
+    </ol>
+  </section>
+
+  <section id="sheet" aria-labelledby="h-sheet">
+    <div class="sec-head"><h2 id="h-sheet"><span class="no">04</span>キャラシ下書き帳</h2></div>
+    <div class="tool">
+      <p>能力値はつまみで決め、職業を選んで技能にポイントを振るだけで、探索者の下書きができるページです。計算は自動で行われます。</p>
+      <a class="btn" href="https://usb-net.github.io/TRPG/CSdraft.html">キャラシ下書き帳を開く</a>
+      <p class="note">入力した内容は、使っている端末のブラウザに保存されます。</p>
+    </div>
+  </section>
+
+  <section id="madness" aria-labelledby="h-madness">
+    <div class="sec-head"><h2 id="h-madness"><span class="no">05</span>一時的狂気表</h2></div>
+    <p>1回の正気度ロールで正気度（SAN）が5以上減ると、〈アイデア〉ロールを行います。成功すると、目の前の出来事を「理解してしまい」、一時的な狂気に陥ります（失敗すれば、理解できずに済みます）。症状は下の表をダイスで決めるか、KPとプレイヤーが相談して決めます。どう演じるかも相談しながらで大丈夫です。</p>
+    <h3>短期の一時的狂気（1D10＋4 戦闘ラウンド）</h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th scope="col">1D10</th><th scope="col">症状</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><span class="d">1</span></th><td>気絶する、または悲鳴を上げ続ける</td></tr>
+          <tr><th scope="row"><span class="d">2</span></th><td>パニックになって逃げ出す</td></tr>
+          <tr><th scope="row"><span class="d">3</span></th><td>大笑いや大泣きが止まらなくなる</td></tr>
+          <tr><th scope="row"><span class="d">4</span></th><td>わけの分からないことを早口でつぶやく、またはしゃべるのが止まらなくなる</td></tr>
+          <tr><th scope="row"><span class="d">5</span></th><td>怖すぎて、その場から動けなくなる</td></tr>
+          <tr><th scope="row"><span class="d">6</span></th><td>人を殺したくなる、または自分を殺したくなる</td></tr>
+          <tr><th scope="row"><span class="d">7</span></th><td>ありもしないものが見える、またはありえないことを信じ込む</td></tr>
+          <tr><th scope="row"><span class="d">8</span></th><td>周りの人の動きや言葉を、そのままマネしてしまう</td></tr>
+          <tr><th scope="row"><span class="d">9</span></th><td>泥やべたべたしたもの、人の肉など、食べ物でないものを食べたくなる</td></tr>
+          <tr><th scope="row"><span class="d">10</span></th><td>赤ちゃんのように丸まって何も分からなくなる、または心が空っぽになり、言われたことしかできなくなる</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>長期の一時的狂気（1D10×10 時間）</h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th scope="col">1D10</th><th scope="col">症状</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><span class="d">1</span></th><td>記憶を失う（親しい人のことから忘れる。体は動くが、頭を使うことができない）、または短期の表の10の状態</td></tr>
+          <tr><th scope="row"><span class="d">2</span></th><td>怖いものが頭から離れない（逃げても、どこへ行ってもそれが見える）</td></tr>
+          <tr><th scope="row"><span class="d">3</span></th><td>ありもしないものが見える</td></tr>
+          <tr><th scope="row"><span class="d">4</span></th><td>変わった性癖に目覚める（人前で裸になりたい、性欲が止まらない、異形のものに惹かれるなど）</td></tr>
+          <tr><th scope="row"><span class="d">5</span></th><td>ある物や人に、異常なほど執着する</td></tr>
+          <tr><th scope="row"><span class="d">6</span></th><td>体のひきつりや震えが止まらない、または話すことも書くこともできなくなる</td></tr>
+          <tr><th scope="row"><span class="d">7</span></th><td>心のショックで、目が見えない・耳が聞こえない・手足が動かなくなる</td></tr>
+          <tr><th scope="row"><span class="d">8</span></th><td>めちゃくちゃなことを言ったりしたりする、ありえないことを信じ込む、ありもしないものが見えるなど</td></tr>
+          <tr><th scope="row"><span class="d">9</span></th><td>周りの人が全員敵に思えて、何もかも疑ってしまう</td></tr>
+          <tr><th scope="row"><span class="d">10</span></th><td>同じ行動をやめられない（手を洗い続ける、祈り続ける、決まったリズムで歩く、床の割れ目をまたげない、銃を何度も確かめるなど）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">ルールブック90ページ「一時的狂気表」をもとにまとめたものです。短期・長期のどちらを使うかはKPが決めます。</p>
+  </section>
+
+  <section id="links" aria-labelledby="h-links">
+    <div class="sec-head"><h2 id="h-links"><span class="no">06</span>役立つリンク</h2></div>
+    <ul class="links">
+      <li><a href="https://ccfolia.com/" target="_blank" rel="noopener">ココフォリア</a><span>セッションを遊ぶ場所。部屋を作るとき以外は登録なしでも使えますが、登録しておくと別の端末から入ったときも、その部屋で作ったキャラクターを引き継げて楽です。ユーザー名は設定しない限り「匿名さん」になるので、既存のアカウントで登録しても大丈夫です。</span></li>
+      <li><a href="https://sazano123.com/%E3%82%B2%E3%83%BC%E3%83%A0%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88/2807.html" target="_blank" rel="noopener">TRPGとは（ゲームインスト）</a><span>TRPGがどんな遊びかを、もう少し詳しく知りたい人向け。</span></li>
+      <li><a href="https://twitter.com/kkkkirkir/status/1445651905254887442" target="_blank" rel="noopener">TRPGの解説（Xの投稿）</a><span>初めての人向けの解説です。</span></li>
+    </ul>
+  </section>
+
+  <footer>このページの内容は、卓ごとに更新することがあります。</footer>
+</div>
+
+</body>
+</html>
