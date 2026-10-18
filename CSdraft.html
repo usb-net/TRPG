@@ -1,4 +1,9 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>キャラシ下書き帳</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -128,6 +133,8 @@ summary{cursor:pointer;font-weight:700}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
+</head>
+<body>
 <div class="wrap">
   <header>
     <p class="eyebrow">CALL OF CTHULHU 6th ed.</p>
@@ -190,8 +197,8 @@ summary{cursor:pointer;font-weight:700}
   <section aria-labelledby="h-out">
     <div class="sec-head"><h2 id="h-out">書き出し・読み込み</h2></div>
     <div class="out">
-      <p class="hint">完成したら下のボタンを押してコピーし、そのまま斑に送ってください。斑がキャラクターシートに清書します。</p>
-      <button type="button" class="primary big" id="btnKp">斑に送るテキストをコピー</button>
+      <p class="hint">完成したら下のボタンを押してコピーし、そのまま斑に送ってください。キャラクターシートに清書します。</p>
+      <button type="button" class="primary big" id="btnKp">送るテキストをコピー</button>
       <p class="msg" id="msg" role="status"></p>
       <textarea id="outBox" rows="5" readonly aria-label="書き出し内容"></textarea>
       <details>
@@ -516,7 +523,7 @@ function kpText(){const dv=derived(),out=[];
  if(adds.length)out.push("［追加する技能］",...adds);
  out.push("",`【メモ】`,st.info.memo||"（なし）","","【共有コード】",code());
  return out.join("\n")}
-$("btnKp").onclick=()=>copy(kpText(),"斑に送るテキスト");
+$("btnKp").onclick=()=>copy(kpText(),"送るテキスト");
 $("btnCcf").onclick=()=>copy(ccfolia(),"ココフォリア駒");
 $("btnText").onclick=()=>copy(text(),"一覧テキスト");
 $("btnCode").onclick=()=>copy(code(),"共有コード");
@@ -533,4 +540,5 @@ document.addEventListener("submit",e=>e.preventDefault());
 buildStats();buildSkills();fill();
 </script>
 
-</body></html>
+</body>
+</html>
