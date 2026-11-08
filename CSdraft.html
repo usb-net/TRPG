@@ -201,7 +201,7 @@ summary{cursor:pointer;font-weight:700}
       <p class="hint">完成したら下のボタンを押してコピーし、そのまま斑に送ってください。キャラクターシートに清書します。</p>
       <button type="button" class="primary big" id="btnKp">送るテキストをコピー</button>
       <p class="msg" id="msg" role="status"></p>
-      <textarea id="outBox" rows="5" readonly aria-label="書き出し内容"></textarea>
+      <textarea id="outBox" rows="5" readonly aria-label="書き出し内容" hidden></textarea>
       <details>
         <summary>経験者向け（ココフォリア駒・一覧テキスト・共有コード）</summary>
         <p class="hint">ココフォリア駒：コピーしてココフォリアのルーム画面に貼り付けると駒が作られます（HP・MP・SANと能力値、主な技能の判定コマンド入り）。<br>一覧テキスト：BANDなどに貼れる、技能の合計値だけの一覧です。<br>共有コード：このページで丸ごと復元できる文字列です。</p>
@@ -489,7 +489,7 @@ $("addSkill").onclick=()=>{touch();st.extra.push({name:"",base:1,j:"",h:"",o:""}
 $("onlyUsed").onchange=refresh;$("showDesc").onchange=refresh;
 
 function say(t,err){const m=$("msg");m.textContent=t;m.classList.toggle("err",!!err)}
-function copy(text,label){$("outBox").value=text;const ok=()=>say(label+"をコピーしました。");const ng=()=>{$("outBox").select();say("自動コピーできませんでした。下の欄を選択してコピーしてください。",true)};
+function copy(text,label){$("outBox").value=text;$("outBox").hidden=true;const ok=()=>say(label+"をコピーしました。");const ng=()=>{$("outBox").hidden=false;$("outBox").select();say("自動コピーできませんでした。下の欄を選択してコピーしてください。",true)};
  try{navigator.clipboard.writeText(text).then(ok,ng)}catch(e){ng()}}
 function ccfolia(){const dv=derived();const rows=allRows();
  const params=STATS.map(([k])=>({label:k,value:String(S(k))}));
