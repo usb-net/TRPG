@@ -147,7 +147,7 @@ summary{cursor:pointer;font-weight:700}
     <div class="sec-head"><h2 id="h-info">基本情報</h2></div>
     <aside class="note"><b>どんな探索者にする？</b>このサークルで交流している、普段のあなたの姿を想定しています。別のキャラクターで遊びたい場合は、世界観をそろえるため、名前を漢字一文字にしてください。</aside>
     <div class="info">
-      <label>名前（HN）<input id="i-name" placeholder="例：斑"></label>
+      <label>名前（HN）<input id="i-name" placeholder="例：斑鳩理人"></label>
       <label>職業<input id="i-job"></label>
       <label>年齢<input id="i-age" inputmode="numeric"></label>
       <label>性別<input id="i-sex"></label>
@@ -406,7 +406,7 @@ function applyOcc(){const al=occAllowed();
  buildSkills();fill()}
 
 const KEY="coc6-sheet-v1";
-const SAMPLE={sample:true,info:{name:"例：斑",job:"古書店主",age:"30",sex:"男",memo:"記入例です。白紙から作るボタンで消えます。"},
+const SAMPLE={sample:true,info:{name:"例：斑鳩理人",job:"古書店主",age:"30",sex:"男",memo:"記入例です。白紙から作るボタンで消えます。"},
  stats:{STR:12,CON:14,POW:14,DEX:11,APP:12,SIZ:13,INT:14},edu:{school:"大学卒業",self:0},agePen:[],
  skills:{"図書館":{j:35},"目星":{j:25},"歴史":{j:60},"値切り":{j:40},"ほかの言語":{j:40},"芸術":{j:30},"製作":{j:40},"聞き耳":{h:20},"回避":{h:30},"応急手当":{h:35},"写真術":{h:30}},extra:[],occ:{name:"古物研究家",alt:{},pick:{},free:[]}};
 const blank=()=>({sample:false,info:{name:"",job:"",age:"",sex:"",memo:""},stats:Object.fromEntries(SLIDERS.map(k=>[k,AVG])),edu:{school:"",self:0},skills:{},extra:[],agePen:[],occ:{name:"",alt:{},pick:{},free:[]}});
