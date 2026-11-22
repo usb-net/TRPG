@@ -181,6 +181,11 @@ footer .dl{margin:0 0 6px}
 .seatdiv i{width:10px;height:10px;border-radius:50%;background:var(--ink)}
 .seatdiv i.e{background:transparent;border:1.5px dashed var(--red-ink)}
 small.sub{font-size:12px;color:var(--sub)}
+:root{--bub-m:#ebe2e7;--bub-m-ink:var(--ink);--bub-m-nm:#6b5a63}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bub-m:#685261;--bub-m-ink:#f4eef1;--bub-m-nm:#d9c8d1}}
+:root[data-theme="dark"]{--bub-m:#685261;--bub-m-ink:#f4eef1;--bub-m-nm:#d9c8d1}
+.say.pm .bub{background:var(--bub-m);color:var(--bub-m-ink)}
+.say.pm .nm{color:var(--bub-m-nm)}
 </style>
 </head>
 <body>
